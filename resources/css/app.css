@@ -2,60 +2,205 @@
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source '../js/**/*.js';
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/*
+ * Crwydro design tokens. The palette comes from upland Wales on an OS
+ * Explorer map: heather moor, peat, tarns and bracken. Status colours carry
+ * meaning: bracken means "only on this device", moss means "safe on the
+ * server", red means "needs you".
+ */
+:root {
+    --canvas: #edf1ef;
+    --surface: #fbfcfb;
+    --sunk: #e2e8e4;
+    --line: #d3dbd6;
+    --line-strong: #b4c0b9;
+    --ink: #1c2621;
+    --muted: #56645e;
+    --faint: #7c8a83;
 
-    /* Peat, moss and bracken: high contrast for reading outdoors */
-    --color-peat-50: #f4f6f3;
-    --color-peat-100: #e3e8e1;
-    --color-peat-200: #c6d0c3;
-    --color-peat-400: #7d8f78;
-    --color-peat-600: #4a5a46;
-    --color-peat-800: #263123;
-    --color-peat-900: #172014;
-    --color-moss-500: #4f7a3a;
-    --color-moss-600: #3e6330;
-    --color-moss-700: #2f4c25;
-    --color-bracken-400: #e0913a;
-    --color-bracken-500: #c8741f;
-    --color-bracken-600: #a65c15;
-    --color-slate-mist: #dfe6ea;
+    --accent: #8a2d6b;
+    --accent-hover: #74235a;
+    --accent-ink: #ffffff;
+    --accent-soft: #f3e4ee;
+
+    --ok: #3c6b3a;
+    --ok-soft: #e0ecdc;
+    --warn: #96500f;
+    --warn-soft: #f6e6d3;
+    --danger: #a3271f;
+    --danger-soft: #f8e1df;
+    --link: #2b6584;
+
+    --panel: #17231d;
+    --panel-ink: #eef3ef;
+    --panel-muted: #a9b8b0;
+    --panel-line: #2c3c34;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --canvas: #111916;
+        --surface: #18221d;
+        --sunk: #212d27;
+        --line: #2d3b34;
+        --line-strong: #3f5047;
+        --ink: #e6ece8;
+        --muted: #a5b2ab;
+        --faint: #7f8d86;
+
+        --accent: #d07bb1;
+        --accent-hover: #e093c4;
+        --accent-ink: #1c0f18;
+        --accent-soft: #3a2232;
+
+        --ok: #8cc285;
+        --ok-soft: #1f3320;
+        --warn: #e3a35f;
+        --warn-soft: #3a2a17;
+        --danger: #f08a80;
+        --danger-soft: #3d1d1a;
+        --link: #8cc0dd;
+
+        --panel: #0c1310;
+        --panel-ink: #e6ece8;
+        --panel-muted: #94a39b;
+        --panel-line: #24312a;
+    }
+}
+
+@theme inline {
+    --font-sans: 'Atkinson Hyperlegible Next', ui-sans-serif, system-ui, sans-serif;
+
+    --color-canvas: var(--canvas);
+    --color-surface: var(--surface);
+    --color-sunk: var(--sunk);
+    --color-line: var(--line);
+    --color-line-strong: var(--line-strong);
+    --color-ink: var(--ink);
+    --color-muted: var(--muted);
+    --color-faint: var(--faint);
+    --color-accent: var(--accent);
+    --color-accent-hover: var(--accent-hover);
+    --color-accent-ink: var(--accent-ink);
+    --color-accent-soft: var(--accent-soft);
+    --color-ok: var(--ok);
+    --color-ok-soft: var(--ok-soft);
+    --color-warn: var(--warn);
+    --color-warn-soft: var(--warn-soft);
+    --color-danger: var(--danger);
+    --color-danger-soft: var(--danger-soft);
+    --color-link: var(--link);
+    --color-panel: var(--panel);
+    --color-panel-ink: var(--panel-ink);
+    --color-panel-muted: var(--panel-muted);
+    --color-panel-line: var(--panel-line);
+
+    /* Radius by level: panels, then cards, then controls; chips are round */
+    --radius-panel: 20px;
+    --radius-card: 14px;
+    --radius-control: 12px;
 }
 
 @layer base {
     html {
         -webkit-tap-highlight-color: transparent;
+        /* 17px base on phones for reading outdoors; 16px on laptops */
+        font-size: 106.25%;
+        font-variant-numeric: tabular-nums;
+    }
+
+    @media (min-width: 1024px) {
+        html {
+            font-size: 100%;
+        }
     }
 
     body {
-        @apply bg-peat-50 text-peat-900 antialiased;
+        @apply bg-canvas text-ink antialiased;
+    }
+
+    h1,
+    h2,
+    h3 {
+        @apply font-extrabold tracking-[-0.02em] text-balance;
+    }
+
+    :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
     }
 
     [x-cloak] {
         display: none !important;
     }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+/* The one decorative element: OS-style contours on the brand panel */
+@utility contour-panel {
+    background-color: var(--panel);
+    background-image: url('../images/contours.svg');
+    background-size: cover;
+    background-position: center;
+    color: var(--panel-ink);
 }
 
 @utility btn {
-    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-base font-semibold transition active:scale-[0.98] disabled:opacity-50;
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-control px-5 text-base font-bold transition-colors active:translate-y-px disabled:pointer-events-none disabled:opacity-50;
 }
 
 @utility btn-primary {
-    @apply btn bg-moss-600 text-white shadow-sm hover:bg-moss-700;
+    @apply btn bg-accent text-accent-ink hover:bg-accent-hover;
 }
 
 @utility btn-secondary {
-    @apply btn border border-peat-200 bg-white text-peat-800 hover:bg-peat-100;
+    @apply btn border border-line-strong bg-surface text-ink hover:bg-sunk;
+}
+
+@utility btn-quiet {
+    @apply btn px-3 text-accent hover:bg-accent-soft;
+}
+
+@utility btn-danger {
+    @apply btn border border-line-strong bg-surface text-danger hover:bg-danger-soft;
 }
 
 @utility field {
-    @apply block min-h-12 w-full rounded-xl border border-peat-200 bg-white px-4 text-base text-peat-900 placeholder:text-peat-400 focus:border-moss-500 focus:ring-2 focus:ring-moss-500/30 focus:outline-none;
+    @apply block min-h-12 w-full rounded-control border border-line-strong bg-surface px-4 text-base text-ink placeholder:text-faint focus:border-accent focus:outline-none focus-visible:outline-none focus:ring-3 focus:ring-accent/25;
 }
 
 @utility label {
-    @apply mb-1.5 block text-sm font-semibold text-peat-800;
+    @apply mb-1.5 block text-sm font-bold text-ink;
+}
+
+@utility hint {
+    @apply text-sm text-muted;
+}
+
+@utility card {
+    @apply rounded-card border border-line bg-surface;
+}
+
+@utility chip {
+    @apply inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-4 text-sm font-bold text-ink transition-colors hover:bg-sunk;
+}
+
+@utility chip-on {
+    @apply border-accent bg-accent text-accent-ink hover:bg-accent-hover;
+}
+
+@utility notice {
+    @apply rounded-control px-4 py-3 text-sm font-bold;
 }
 
 @utility no-scrollbar {

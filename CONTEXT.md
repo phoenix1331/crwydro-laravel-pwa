@@ -44,7 +44,7 @@ All artisan, composer, npm and test commands run inside the container: `docker c
 | MySQL | Project default stack |
 | Photos stored at `photos/{user_id}/{entry_id}/{photo_id}.jpg` on `PHOTOS_DISK` (`config/crwydro.php`) | Deterministic path makes retries overwrite rather than orphan files; local in dev, S3 in production |
 | Hash routes (`/#/entries/new`) with one Blade shell at `/` | Only one HTML document to precache; every view works offline |
-| Fonts self-hosted via `laravel-vite-plugin/fonts` and `@fonts` | No third-party font request, so the shell renders identically offline |
+| Fonts self-hosted via `laravel-vite-plugin/fonts` and `@fonts` (Atkinson Hyperlegible Next 400/700/800) | No third-party font request, so the shell renders identically offline |
 | Service worker via `vite-plugin-pwa` `injectManifest` (`resources/js/sw.js`) | Custom worker needed later for Background Sync; worker emitted to `public/sw.js` so its scope is `/` |
 | `/` shell precached with a per-build revision (`__BUILD_ID__`) | Server-rendered shell refreshes with each deploy alongside hashed assets |
 | `registerType: 'prompt'` (`resources/js/pwa.js`) | Never swap code under a walker mid-trip; they choose when to update |
@@ -166,3 +166,15 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Cursor | `meta.pullCursor`; each page and its cursor are written in one Dexie transaction, so an interrupted pull resumes from the last complete page; a 422 resets the cursor and pulls from the start |
 | Merge | Entries with any outbox rows are skipped (the device's copy wins and its push settles it on the server); otherwise the server copy is taken only if its `client_updated_at` is newer; server deletes remove the entry and its photos |
 | Photos | Pulled as metadata (`remote: true`, no Blobs); `downloadThumbnails()` fetches up to 20 thumbnails per sync; the full image downloads the first time it is opened (`fetchFullPhoto`) |
+
+## Design system (`resources/css/app.css`)
+
+| Item | Detail |
+|------|--------|
+| Direction | OS Explorer map vernacular: heather, peat, tarn, bracken; one decorative element, the contour texture (`contour-panel`, `resources/images/contours.svg`, `make contours`) on the brand panel only |
+| Colour | Semantic tokens as CSS variables with a dark set under `prefers-color-scheme`: `canvas`, `surface`, `sunk`, `line`, `line-strong`, `ink`, `muted`, `faint`, `accent` (heather), `ok` (moss), `warn` (bracken), `danger`, `link` (tarn), `panel*`. Use these, never literal palette classes |
+| Status meaning | `warn` = only on this device, `ok` = safe on the server, `danger` = needs the walker |
+| Type | Atkinson Hyperlegible Next; headings 800 with -0.02em tracking; tabular figures everywhere; 17px base on phones, 16px from 1024px |
+| Radius | `rounded-panel` 20, `rounded-card` 14, `rounded-control` 12, chips `rounded-full` |
+| Components | `@utility` classes: `btn`, `btn-primary`, `btn-secondary`, `btn-quiet`, `btn-danger`, `field`, `label`, `hint`, `card`, `chip`, `chip-on`, `notice`, `no-scrollbar` |
+| Avoid | Middle-dot metadata strings, arrows appended to links, all-caps labels, `font-semibold` (600 is not loaded) |

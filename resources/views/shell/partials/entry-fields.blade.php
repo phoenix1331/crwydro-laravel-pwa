@@ -1,5 +1,5 @@
 <div>
-    <label for="{{ $prefix }}-route" class="label">Walk <span class="font-normal text-peat-400">(optional)</span></label>
+    <label for="{{ $prefix }}-route" class="label">Walk <span class="font-normal text-faint">(optional)</span></label>
     <select id="{{ $prefix }}-route" class="field" x-model="routeId">
         <option value="">Not on a featured walk</option>
         <template x-for="walk in walks" :key="walk.id">
@@ -13,13 +13,13 @@
     <div class="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
         <template x-for="item in quickPicks()" :key="item.cy">
             <button type="button" @click="pickSpecies(item)"
-                    class="min-h-10 shrink-0 rounded-full border border-peat-200 bg-white px-3 text-sm text-peat-800 active:bg-peat-100">
-                <span class="font-semibold" x-text="item.cy"></span>
-                <span class="text-peat-600" x-text="`(${item.en})`"></span>
+                    class="min-h-10 shrink-0 rounded-full border border-line bg-surface px-3 text-sm text-ink active:bg-sunk">
+                <span class="font-bold" x-text="item.cy"></span>
+                <span class="text-muted" x-text="`(${item.en})`"></span>
             </button>
         </template>
     </div>
-    <p x-show="hint" x-text="hint" class="mt-2 rounded-xl bg-bracken-400/20 px-3 py-2 text-sm font-semibold text-bracken-600"></p>
+    <p x-show="hint" x-text="hint" class="mt-2 rounded-xl bg-warn-soft px-3 py-2 text-sm font-bold text-warn"></p>
 </div>
 
 <div>
@@ -32,8 +32,8 @@
     <legend class="label">Tag</legend>
     <div class="grid grid-cols-3 gap-2">
         <template x-for="option in tags" :key="option.key">
-            <label class="flex min-h-12 cursor-pointer items-center justify-center rounded-xl border px-2 text-center text-sm font-semibold transition"
-                   :class="tag === option.key ? 'border-moss-600 bg-moss-600 text-white' : 'border-peat-200 bg-white text-peat-800'">
+            <label class="chip min-h-12 cursor-pointer justify-center rounded-control px-2 has-focus-visible:outline-3 has-focus-visible:outline-accent"
+                   :class="tag === option.key && 'chip-on'">
                 <input type="radio" name="{{ $prefix }}-tag" class="sr-only" :value="option.key" x-model="tag">
                 <span x-text="option.en"></span>
             </label>
@@ -42,36 +42,36 @@
 </fieldset>
 
 <div>
-    <label for="{{ $prefix }}-notes" class="label">Notes <span class="font-normal text-peat-400">(optional)</span></label>
+    <label for="{{ $prefix }}-notes" class="label">Notes <span class="font-normal text-faint">(optional)</span></label>
     <textarea id="{{ $prefix }}-notes" rows="4" class="field py-3" x-model="notes" maxlength="10000"
               placeholder="What did you see?"></textarea>
 </div>
 
 <div>
-    <p class="label">Photos <span class="font-normal text-peat-400">(up to 4)</span></p>
+    <p class="label">Photos <span class="font-normal text-faint">(up to 4)</span></p>
 
     <div class="grid grid-cols-4 gap-2">
         @if ($existing ?? false)
             <template x-for="photo in photos" :key="photo.id">
-                <div class="relative aspect-square overflow-hidden rounded-xl bg-peat-100">
+                <div class="relative aspect-square overflow-hidden rounded-xl bg-sunk">
                     <img :src="photoUrl(photo)" alt="" class="size-full object-cover">
                     <button type="button" x-show="photo.syncStatus !== 'synced'" @click="removePhoto(photo)"
-                            class="absolute top-1 right-1 flex size-8 items-center justify-center rounded-full bg-peat-900/80 text-white"
+                            class="absolute top-1 right-1 flex size-8 items-center justify-center rounded-full bg-black/70 text-white"
                             aria-label="Remove photo">&times;</button>
                 </div>
             </template>
         @endif
 
         <template x-for="photo in pending" :key="photo.key">
-            <div class="relative aspect-square overflow-hidden rounded-xl bg-peat-100">
+            <div class="relative aspect-square overflow-hidden rounded-xl bg-sunk">
                 <img :src="photo.url" alt="" class="size-full object-cover">
                 <button type="button" @click="removePending(photo.key)"
-                        class="absolute top-1 right-1 flex size-8 items-center justify-center rounded-full bg-peat-900/80 text-white"
+                        class="absolute top-1 right-1 flex size-8 items-center justify-center rounded-full bg-black/70 text-white"
                         aria-label="Remove photo">&times;</button>
             </div>
         </template>
 
-        <div x-show="resizing" x-cloak class="flex aspect-square items-center justify-center rounded-xl bg-peat-100 text-xs font-semibold text-peat-600">
+        <div x-show="resizing" x-cloak class="flex aspect-square items-center justify-center rounded-xl bg-sunk text-xs font-bold text-muted">
             Resizing…
         </div>
     </div>
@@ -90,7 +90,7 @@
         </label>
     </div>
 
-    <p x-show="photoError" x-text="photoError" class="mt-2 text-sm font-semibold text-red-800"></p>
+    <p x-show="photoError" x-text="photoError" class="mt-2 text-sm font-bold text-danger"></p>
 </div>
 
-<p x-show="error" x-text="error" class="rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-800" role="alert"></p>
+<p x-show="error" x-text="error" class="rounded-xl bg-danger-soft px-4 py-3 text-sm font-bold text-danger" role="alert"></p>

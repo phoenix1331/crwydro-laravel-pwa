@@ -93,8 +93,8 @@ export function deviceMap() {
             for (const entry of entries.filter((item) => item.lat !== null)) {
                 const popup = document.createElement('a');
                 popup.href = `#/entries/${entry.id}`;
-                popup.className = 'font-semibold';
-                popup.textContent = `${entry.title} · ${tagLabel(entry.tag)}`;
+                popup.className = 'font-bold';
+                popup.textContent = `${entry.title} (${tagLabel(entry.tag).toLowerCase()})`;
 
                 L.circleMarker([entry.lat, entry.lng], {
                     radius: 9,

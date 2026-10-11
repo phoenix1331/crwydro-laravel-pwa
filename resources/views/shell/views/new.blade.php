@@ -15,7 +15,7 @@
                 Save without location
             </button>
 
-            <p class="text-center text-sm text-peat-600">Location and time are added automatically. GPS works without signal.</p>
+            <p class="text-center text-sm text-muted">Location and time are added automatically. GPS works without signal.</p>
         </div>
     </form>
 </section>

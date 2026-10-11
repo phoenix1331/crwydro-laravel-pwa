@@ -39,8 +39,9 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/web-map.js'],
             refresh: true,
             fonts: [
-                bunny('Instrument Sans', {
-                    weights: [400, 500, 600, 700],
+                // Designed for legibility: holds up in glare and with cold, gloved hands
+                bunny('Atkinson Hyperlegible Next', {
+                    weights: [400, 700, 800],
                 }),
             ],
         }),
@@ -77,7 +78,7 @@ export default defineConfig({
             },
             injectManifest: {
                 globDirectory: 'public',
-                globPatterns: ['build/assets/*.{js,css,woff2,woff}', 'icons/*.png', 'routes/*.geojson'],
+                globPatterns: ['build/assets/*.{js,css,woff2,woff,svg}', 'icons/*.png', 'routes/*.geojson'],
                 additionalManifestEntries: [{ url: '/', revision: buildId }],
             },
             devOptions: {

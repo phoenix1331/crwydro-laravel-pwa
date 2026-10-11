@@ -36,13 +36,13 @@ function popup(entry) {
     wrapper.className = 'max-w-64';
 
     const title = document.createElement('p');
-    title.className = 'font-semibold';
+    title.className = 'font-bold';
     title.textContent = entry.title;
     wrapper.append(title);
 
     const meta = document.createElement('p');
-    meta.className = 'text-xs text-peat-600';
-    meta.textContent = `${entry.tag} · ${new Date(entry.recorded_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}`;
+    meta.className = 'text-xs text-muted';
+    meta.textContent = `${entry.tag}, ${new Date(entry.recorded_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}`;
     wrapper.append(meta);
 
     if (entry.notes) {
