@@ -115,7 +115,7 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Rule | Detail |
 |------|--------|
 | Preconditions | Token in `meta`, no `authRequired` flag, `GET /api/ping` answers within 3 s |
-| Order | Rows sent in `seq` order; once a row for an entry is waiting or failed, later rows for that entry are held while other entries continue |
+| Order | Rows sent in `seq` order. A waiting or failed entry put or delete holds back that entry's later rows (photos need the entry first); a waiting or failed photo holds back nothing, so text edits and other photos still go |
 | Success | Row removed only if its `rev` is unchanged since sending; entry badge recomputed; synced deletes purged from the device |
 | Network error or timeout | Row kept, backed off, run stops (`interrupted`) |
 | 401 | Run stops, `meta.authRequired = true`, outbox untouched |

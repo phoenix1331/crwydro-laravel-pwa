@@ -127,9 +127,11 @@ async function release(row) {
 }
 
 /**
- * Drain the outbox in `seq` order. Rows for one entry never overtake each
- * other: once a row for an entry is waiting or failed, later rows for that
- * entry are held back, while other entries carry on.
+ * Drain the outbox in `seq` order. Once an entry's own put or delete is
+ * waiting or failed, every later row for that entry is held back (its photos
+ * need the entry on the server first), while other entries carry on. A photo
+ * that is waiting or failed holds nothing back: the entry text and other
+ * photos still go.
  */
 export async function processOutbox({ fetch: fetchImpl, now = Date.now, random = Math.random } = {}) {
     const token = await getMeta('token');
@@ -166,8 +168,11 @@ export async function processOutbox({ fetch: fetchImpl, now = Date.now, random =
             continue;
         }
 
+        const holdsEntry = row.kind !== PHOTO_PUT;
+
         if (row.failed || row.nextAttemptAt > now()) {
-            held.add(row.entryId);
+            if (holdsEntry) held.add(row.entryId);
+
             stats.deferred += row.failed ? 0 : 1;
             continue;
         }
@@ -209,7 +214,9 @@ export async function processOutbox({ fetch: fetchImpl, now = Date.now, random =
             return { status: RESULT_AUTH_REQUIRED, ...stats };
         }
 
-        held.add(row.entryId);
+        if (holdsEntry) {
+            held.add(row.entryId);
+        }
 
         if (RETRYABLE(response.status)) {
             await retryLater(row, now, random, errorMessage(response));

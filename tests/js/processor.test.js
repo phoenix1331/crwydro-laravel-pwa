@@ -218,3 +218,63 @@ describe('backoffDelay', () => {
         expect(backoffDelay(20, mid)).toBe(15 * 60_000);
     });
 });
+
+describe('photo uploads', () => {
+    const PHOTO_ID = '01K7A3RB4C6D8E0F2G4H6J8K0M';
+
+    async function entryWithPhoto() {
+        const entry = await createEntry({ title: 'Llyn Cau', tag: 'view' });
+        await db.photos.add({ id: PHOTO_ID, entryId: entry.id, blob: new Blob(['jpeg-bytes'], { type: 'image/jpeg' }), syncStatus: 'local', createdAt: '' });
+        await queuePhotoPut(PHOTO_ID, entry.id);
+
+        return entry;
+    }
+
+    it('uploads each photo as a raw jpeg body and marks it synced', async () => {
+        const entry = await entryWithPhoto();
+        const server = fakeServer();
+
+        await processOutbox(options(server));
+
+        const upload = server.calls.find((call) => call.key.endsWith(`/photos/${PHOTO_ID}`));
+        expect(upload.init.headers['Content-Type']).toBe('image/jpeg');
+        expect(await upload.init.body.text()).toBe('jpeg-bytes');
+        expect((await db.photos.get(PHOTO_ID)).syncStatus).toBe('synced');
+        expect((await db.entries.get(entry.id)).syncStatus).toBe('synced');
+    });
+
+    it('does not let a failing photo hold back a later edit to the entry text', async () => {
+        const entry = await entryWithPhoto();
+        const server = fakeServer({ [`PUT /api/entries/${entry.id}/photos`]: [503, { message: 'Busy' }] });
+
+        await processOutbox(options(server));
+        await updateEntry(entry.id, { title: 'Llyn Cau, fixed' });
+
+        await processOutbox(options(server));
+
+        expect(server.sent().filter((key) => key === `PUT /api/entries/${entry.id}`)).toHaveLength(2);
+        const rows = await db.outbox.toArray();
+        expect(rows.map((row) => row.kind)).toEqual(['photo.put']);
+    });
+
+    it('marks the entry failed with the reason when a photo is rejected, but still sends its text', async () => {
+        const entry = await entryWithPhoto();
+        await updateEntry(entry.id, { notes: 'later edit' });
+        const server = fakeServer({ [`PUT /api/entries/${entry.id}/photos`]: [422, { message: 'x', errors: { photo: ['The photo must be a JPEG image.'] } }] });
+
+        await processOutbox(options(server));
+
+        expect(server.sent()).toEqual([`PUT /api/entries/${entry.id}`, `PUT /api/entries/${entry.id}/photos/${PHOTO_ID}`]);
+        expect(await db.entries.get(entry.id)).toMatchObject({ syncStatus: 'failed', syncError: 'The photo must be a JPEG image.' });
+    });
+
+    it('holds photos back while the entry itself is waiting to be created', async () => {
+        await entryWithPhoto();
+        const server = fakeServer({ 'PUT /api/entries/': [503, { message: 'Busy' }] });
+
+        await processOutbox(options(server));
+
+        expect(server.sent()).toHaveLength(1);
+        expect(server.sent()[0]).not.toContain('/photos/');
+    });
+});
