@@ -71,6 +71,7 @@ export function entryDetail() {
         entry: null,
         photos: [],
         enlarged: null,
+        opener: null,
         subscription: null,
         currentId: null,
 
@@ -105,6 +106,16 @@ export function entryDetail() {
                     this.enlarged = { ...photo, blob };
                 }
             }
+        },
+
+        // Keep Tab inside the photo viewer while it is open
+        trapFocus(event, dialog) {
+            const buttons = [...dialog.querySelectorAll('button')].filter((button) => button.getClientRects().length);
+            const index = buttons.indexOf(document.activeElement);
+            const next = (index + (event.shiftKey ? -1 : 1) + buttons.length) % buttons.length;
+
+            event.preventDefault();
+            buttons[next]?.focus();
         },
 
         step(direction) {

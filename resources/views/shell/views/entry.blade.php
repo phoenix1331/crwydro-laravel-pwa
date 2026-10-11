@@ -31,7 +31,7 @@
 
             <div x-show="photos.length" class="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3">
                 <template x-for="photo in photos" :key="photo.id">
-                    <button type="button" class="relative aspect-square overflow-hidden rounded-control bg-sunk" @click="open(photo)" aria-label="Open photo">
+                    <button type="button" class="relative aspect-square overflow-hidden rounded-control bg-sunk" @click="opener = $el; open(photo)" aria-label="Open photo">
                         <img x-show="photoUrl(photo)" :src="photoUrl(photo) ?? ''" alt="" class="size-full object-cover transition-transform hover:scale-[1.03]">
                         <span x-show="! photoUrl(photo)" class="flex size-full items-center justify-center p-2 text-center text-xs font-bold text-muted">Downloads with signal</span>
                         <span x-show="photo.syncStatus !== 'synced'"
@@ -75,13 +75,15 @@
     </template>
 
     <div x-show="enlarged" x-cloak x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+         x-effect="enlarged ? $nextTick(() => $refs.closePhoto.focus()) : opener?.focus()"
          @click.self="enlarged = null" @keydown.escape.window="enlarged = null"
+         @keydown.tab="trapFocus($event, $el)"
          @keydown.arrow-right.window="step(1)" @keydown.arrow-left.window="step(-1)"
          role="dialog" aria-modal="true" aria-label="Photo">
         <img :src="enlarged ? (photoUrl(enlarged, 'blob') ?? '') : ''" alt="" class="max-h-full max-w-full rounded-control">
 
         <button type="button" class="absolute top-4 right-4 flex size-12 items-center justify-center rounded-full bg-white/15 text-2xl text-white hover:bg-white/25"
-                @click="enlarged = null" aria-label="Close photo">&times;</button>
+                x-ref="closePhoto" @click="enlarged = null" aria-label="Close photo">&times;</button>
         <button type="button" x-show="photos.length > 1" class="absolute left-4 flex size-12 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/25"
                 @click="step(-1)" aria-label="Previous photo">@include('shell.icon', ['name' => 'back'])</button>
         <button type="button" x-show="photos.length > 1" class="absolute right-4 flex size-12 rotate-180 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/25"

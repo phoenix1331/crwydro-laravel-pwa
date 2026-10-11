@@ -20,6 +20,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-dvh">
+    <a href="#content" class="sr-only z-50 rounded-control bg-accent px-4 py-3 font-bold text-accent-ink focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+       @click.prevent="document.getElementById('content').focus()" x-data>Skip to content</a>
     <div class="min-h-dvh md:grid md:grid-cols-[15.5rem_minmax(0,1fr)]">
         @include('shell.sidebar')
 
@@ -27,7 +29,7 @@
             @include('shell.header')
             @include('shell.banners')
 
-            <main class="flex-1 px-4 pt-5 pb-28 md:px-8 md:pt-8 md:pb-10 lg:px-10">
+            <main id="content" tabindex="-1" class="flex-1 px-4 pt-5 pb-28 outline-none md:px-8 md:pt-8 md:pb-10 lg:px-10">
                 <div x-data x-show="$store.router.is('entries', 'entry')"
                      class="mx-auto max-w-3xl lg:grid lg:max-w-7xl lg:grid-cols-[minmax(20rem,26rem)_minmax(0,1fr)] lg:items-start lg:gap-8">
                     @include('shell.views.entries')
