@@ -82,6 +82,11 @@ All artisan, composer, npm and test commands run inside the container: `docker c
 | `DELETE /api/entries/{ulid}` | Soft delete, 204 even if unknown or already deleted |
 | `PUT /api/entries/{ulid}/photos/{ulid}` | Raw JPEG body (`Content-Type: image/jpeg`), not multipart, because PHP does not parse multipart on `PUT`. Via `App\Actions\StoreEntryPhoto`: 201 new, 200 if the photo ULID already exists. Server reads dimensions itself. 404 unknown entry, 403 not owner, 413 over `PHOTO_MAX_BYTES`, 422 not JPEG / 4 photos already / ULID on another entry |
 
+| `GET /api/sync?since={cursor}` | Pull sync (`Api\SyncController`): own entries incl. soft deletes, ordered `updated_at, id`, 100 per page, each with `photos`; returns `next_cursor` and `has_more`. Cursor (`App\Sync\SyncCursor`) is opaque base64 of `updated_at|id`, so same-millisecond changes are never skipped; echoed when nothing changed; 422 if malformed |
+| `GET /api/photos/{photo}/{variant?}` | Same `PhotoController` as the web route, token auth; `thumb` or full JPEG |
+
+Adding or processing a photo touches its entry (`EntryPhoto::$touches`), so pull sync picks up photos uploaded after the entry. Known limit: a transaction committing after a later one could slip behind the cursor; acceptable for v1's single walker.
+
 Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.123Z`), via `App\Http\Resources\EntryResource`.
 
 ## PWA

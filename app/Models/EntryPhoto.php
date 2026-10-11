@@ -18,6 +18,13 @@ class EntryPhoto extends Model
     use HasFactory, HasUlids;
 
     /**
+     * Touch the entry when a photo is added or processed, so pull sync sees it as changed.
+     *
+     * @var list<string>
+     */
+    protected $touches = ['entry'];
+
+    /**
      * @return BelongsTo<Entry, $this>
      */
     public function entry(): BelongsTo

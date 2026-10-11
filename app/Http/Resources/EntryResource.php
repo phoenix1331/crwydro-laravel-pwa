@@ -34,6 +34,7 @@ class EntryResource extends JsonResource
             'client_updated_at' => $this->iso($this->client_updated_at),
             'updated_at' => $this->iso($this->updated_at),
             'deleted_at' => $this->iso($this->deleted_at),
+            'photos' => EntryPhotoResource::collection($this->whenLoaded('photos')),
         ];
     }
 

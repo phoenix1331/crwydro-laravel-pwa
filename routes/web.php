@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\Web\MapController;
-use App\Http\Controllers\Web\PhotoController;
 use App\Http\Controllers\Web\SessionController;
 use Illuminate\Support\Facades\Route;
 

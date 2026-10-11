@@ -91,3 +91,23 @@ Authorization: Bearer {{token}}
 # Download every synced entry as CSV, one row per entry with a photo count
 GET {{baseUrl}}/api/export/entries.csv
 Authorization: Bearer {{token}}
+
+### Pull sync
+
+# Everything changed since the start: how a second device catches up (soft deletes included)
+GET {{baseUrl}}/api/sync
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+
+# Changes after a cursor; paste next_cursor from the previous response
+GET {{baseUrl}}/api/sync?since=paste-next-cursor-here
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+
+# Download a photo's thumbnail (drop /thumb for the full image)
+GET {{baseUrl}}/api/photos/01K7A3RB4C6D8E0F2G4H6J8K0M/thumb
+Authorization: Bearer {{token}}

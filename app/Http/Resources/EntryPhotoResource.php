@@ -26,6 +26,8 @@ class EntryPhotoResource extends JsonResource
             'height' => $this->height,
             'bytes' => $this->bytes,
             'has_thumb' => $this->thumb_path !== null,
+            'url' => "/api/photos/{$this->id}",
+            'thumb_url' => "/api/photos/{$this->id}/thumb",
             'created_at' => $this->created_at?->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d\TH:i:s.v\Z'),
         ];
     }
