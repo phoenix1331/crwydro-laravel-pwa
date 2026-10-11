@@ -1,7 +1,10 @@
 import { liveQuery } from 'dexie';
 import { deleteEntry, getEntry, listEntries, updateEntry } from '../data/entries';
+import { addPhotos, coverPhotos, photosFor, removeUnsyncedPhoto } from '../data/photos';
 import { TAGS, tagLabel } from '../data/tags';
 import { formatCoords, formatDateTime, formatRelative, SYNC_BADGES } from './format';
+import { photoUrl } from './object-urls';
+import { photoPicker } from './photo-picker';
 
 const helpers = {
     tagLabel,
@@ -9,6 +12,7 @@ const helpers = {
     formatRelative,
     formatCoords,
     badge: (status) => SYNC_BADGES[status] ?? SYNC_BADGES.local,
+    photoUrl,
 };
 
 /**
@@ -28,6 +32,7 @@ export function entryList() {
         tags: TAGS,
         filter: null,
         entries: [],
+        covers: {},
         loaded: false,
         subscription: null,
 
@@ -37,10 +42,19 @@ export function entryList() {
         },
 
         load() {
-            subscribe(this, () => listEntries({ tag: this.filter }), (entries) => {
-                this.entries = entries;
-                this.loaded = true;
-            });
+            subscribe(
+                this,
+                async () => {
+                    const entries = await listEntries({ tag: this.filter });
+
+                    return { entries, covers: await coverPhotos(entries.map((entry) => entry.id)) };
+                },
+                ({ entries, covers }) => {
+                    this.entries = entries;
+                    this.covers = covers;
+                    this.loaded = true;
+                },
+            );
         },
     };
 }
@@ -49,8 +63,9 @@ export function entryDetail() {
     return {
         ...helpers,
         entry: null,
+        photos: [],
+        enlarged: null,
         subscription: null,
-
         currentId: null,
 
         // Called from x-effect so it re-runs whenever the route changes
@@ -60,7 +75,14 @@ export function entryDetail() {
             }
 
             this.currentId = id;
-            subscribe(this, () => getEntry(id), (entry) => (this.entry = entry ?? null));
+            subscribe(
+                this,
+                async () => ({ entry: await getEntry(id), photos: await photosFor(id) }),
+                ({ entry, photos }) => {
+                    this.entry = entry ?? null;
+                    this.photos = photos;
+                },
+            );
         },
 
         async remove() {
@@ -78,7 +100,11 @@ export function entryDetail() {
 
 export function entryEdit() {
     return {
+        ...photoPicker(),
+        ...helpers,
         tags: TAGS,
+        photos: [],
+        subscription: null,
         id: null,
         title: '',
         notes: '',
@@ -98,8 +124,15 @@ export function entryEdit() {
             this.missing = !entry;
             this.error = null;
 
+            this.takePending();
+            this.photoError = null;
+
             if (entry) {
                 Object.assign(this, { id: entry.id, title: entry.title, notes: entry.notes, tag: entry.tag });
+                subscribe(this, () => photosFor(id), (photos) => {
+                    this.photos = photos;
+                    this.existingCount = photos.length;
+                });
             }
         },
 
@@ -108,6 +141,11 @@ export function entryEdit() {
 
             try {
                 await updateEntry(this.id, { title: this.title, notes: this.notes, tag: this.tag });
+
+                if (this.pending.length) {
+                    await addPhotos(this.id, this.pending.map(({ blob, thumb, width, height }) => ({ blob, thumb, width, height })));
+                    this.takePending();
+                }
             } catch (error) {
                 this.error = error.message;
                 this.saving = false;
@@ -119,6 +157,12 @@ export function entryEdit() {
             window.dispatchEvent(new CustomEvent('crwydro:sync-requested'));
             this.$store.toast.show('Changes saved on this device.', 'success');
             this.$store.router.go(`/entries/${this.id}`);
+        },
+
+        async removePhoto(photo) {
+            if (confirm('Remove this photo? It has not been uploaded yet.')) {
+                await removeUnsyncedPhoto(photo.id);
+            }
         },
     };
 }

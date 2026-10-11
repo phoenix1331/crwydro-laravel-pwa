@@ -2,6 +2,7 @@ import { createEntry } from '../data/entries';
 import { TAGS } from '../data/tags';
 import { nowIso } from '../data/time';
 import { getPosition } from './geo';
+import { photoPicker } from './photo-picker';
 
 const LOCATION_MESSAGES = {
     denied: 'Saved without location: location access is turned off for Crwydro.',
@@ -12,6 +13,7 @@ const LOCATION_MESSAGES = {
 
 export function entryForm() {
     return {
+        ...photoPicker(),
         tags: TAGS,
         title: '',
         notes: '',
@@ -25,6 +27,7 @@ export function entryForm() {
             this.notes = '';
             this.tag = 'flower';
             this.state = 'idle';
+            this.takePending();
             this.error = null;
         },
 
@@ -47,7 +50,14 @@ export function entryForm() {
             this.state = 'saving';
 
             try {
-                await createEntry({ title: this.title, notes: this.notes, tag: this.tag, location, recordedAt });
+                await createEntry({
+                    title: this.title,
+                    notes: this.notes,
+                    tag: this.tag,
+                    location,
+                    recordedAt,
+                    photos: this.pending.map(({ blob, thumb, width, height }) => ({ blob, thumb, width, height })),
+                });
             } catch (error) {
                 this.state = 'idle';
                 this.error = error.message;

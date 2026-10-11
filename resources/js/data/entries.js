@@ -1,10 +1,9 @@
-import { monotonicFactory } from 'ulid';
 import { db } from './db';
+import { ulid } from './ids';
 import { queueEntryDelete, queueEntryPut } from './outbox';
+import { attachPhotos } from './photos';
 import { TAG_KEYS } from './tags';
 import { nextTimestamp, nowIso } from './time';
-
-const ulid = monotonicFactory();
 
 export const SYNC_LOCAL = 'local';
 export const SYNC_SYNCING = 'syncing';
@@ -24,10 +23,12 @@ function validate({ title, tag }) {
 }
 
 /**
- * Save a new entry and queue it for upload in one transaction, so an entry
- * can never exist on the device without a matching outbox row.
+ * Save a new entry (and any photos) and queue it for upload in one
+ * transaction, so nothing can exist on the device without its outbox row.
+ * The entry's put is queued first, so the server always has the entry
+ * before its photos arrive.
  */
-export async function createEntry({ title, notes = '', tag, location = null, recordedAt = null }) {
+export async function createEntry({ title, notes = '', tag, location = null, recordedAt = null, photos = [] }) {
     validate({ title, tag });
 
     const now = nowIso();
@@ -48,9 +49,13 @@ export async function createEntry({ title, notes = '', tag, location = null, rec
         syncError: null,
     };
 
-    await db.transaction('rw', db.entries, db.outbox, async () => {
+    await db.transaction('rw', db.entries, db.photos, db.outbox, async () => {
         await db.entries.add(entry);
         await queueEntryPut(entry.id);
+
+        if (photos.length) {
+            await attachPhotos(entry.id, photos);
+        }
     });
 
     return entry;

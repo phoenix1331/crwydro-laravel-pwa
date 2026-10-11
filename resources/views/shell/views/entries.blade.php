@@ -17,7 +17,9 @@
             <li>
                 <a :href="`#/entries/${entry.id}`"
                    class="flex items-center gap-3 rounded-2xl border border-peat-100 bg-white p-3 shadow-sm active:bg-peat-50">
-                    <div class="flex size-16 shrink-0 items-center justify-center rounded-xl bg-peat-100 text-peat-400" aria-hidden="true">
+                    <img x-show="covers[entry.id]" :src="covers[entry.id] ? photoUrl(covers[entry.id]) : ''" alt=""
+                         class="size-16 shrink-0 rounded-xl bg-peat-100 object-cover">
+                    <div x-show="! covers[entry.id]" class="flex size-16 shrink-0 items-center justify-center rounded-xl bg-peat-100 text-peat-400" aria-hidden="true">
                         <svg viewBox="0 0 24 24" class="size-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
                             <path d="M3 18 9 9l4 6 2-3 6 6z" />
                         </svg>

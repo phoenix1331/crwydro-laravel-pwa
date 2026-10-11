@@ -96,7 +96,7 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Store | Indexes | Notes |
 |-------|---------|-------|
 | `entries` | `id, createdAt, updatedAt, tag, syncStatus, deletedAt` | camelCase fields; `syncStatus` is `local`, `syncing`, `synced` or `failed`; soft delete via `deletedAt` |
-| `photos` | `id, entryId, syncStatus` | Blob plus width and height |
+| `photos` | `id, entryId, syncStatus` | `blob` (max 1600px JPEG), `thumb` (320px JPEG), `width`, `height`, `bytes` |
 | `outbox` | `++seq, kind, refId, entryId, attempts` | `kind` is `entry.put`, `entry.delete` or `photo.put`; also `rev`, `failed`, `nextAttemptAt`, `lastError` |
 | `meta` | `key` | `getMeta` / `setMeta` key-value store |
 
@@ -106,7 +106,9 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | One pending `entry.put` per entry; edits bump its `rev` instead of adding rows | A put always sends the latest state; a send whose `rev` changed mid-flight keeps its row |
 | Editing an entry revives a `failed` put | The walker fixing data is the retry |
 | `updatedAt` always moves forward at least 1 ms (`nextTimestamp`) | Last-write-wins needs strictly ordered edits |
-| IDs from `ulid` `monotonicFactory` | Sortable and unique even when minted in the same millisecond |
+| Photos resized in the browser (`resources/js/ui/resize.js`) via `createImageBitmap` and canvas before storing | Keeps a 40-entry trip within quota; canvas re-encode drops EXIF (including camera GPS) and applies orientation |
+| Up to 4 photos per entry; only unsynced photos can be removed | Matches the server limit; there is no photo delete endpoint in v1 |
+| IDs from `ulid` `monotonicFactory` (`resources/js/data/ids.js`) | Sortable and unique even when minted in the same millisecond |
 
 ## Push sync (`resources/js/sync/processor.js`)
 

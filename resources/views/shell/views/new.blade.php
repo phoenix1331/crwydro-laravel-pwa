@@ -5,7 +5,7 @@
         @include('shell.partials.entry-fields', ['prefix' => 'entry'])
 
         <div class="space-y-3">
-            <button type="submit" class="btn-primary w-full" :disabled="state !== 'idle'">
+            <button type="submit" class="btn-primary w-full" :disabled="state !== 'idle' || resizing">
                 <span x-show="state === 'idle'">Save entry</span>
                 <span x-show="state === 'locating'" x-cloak>Getting your location…</span>
                 <span x-show="state === 'saving'" x-cloak>Saving…</span>

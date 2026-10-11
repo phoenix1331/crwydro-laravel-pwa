@@ -4,6 +4,14 @@
  * GPS works with no mobile signal, it just takes longer for a cold fix.
  */
 export function getPosition({ timeout = 15000, maximumAge = 30000 } = {}) {
+    // The browser's own timeout only starts once permission is granted, so an
+    // unanswered permission prompt would otherwise leave the save hanging
+    const deadline = new Promise((resolve) => setTimeout(() => resolve({ location: null, reason: 'unavailable' }), timeout + 5000));
+
+    return Promise.race([deadline, request(timeout, maximumAge)]);
+}
+
+function request(timeout, maximumAge) {
     return new Promise((resolve) => {
         if (!('geolocation' in navigator)) {
             resolve({ location: null, reason: 'unsupported' });

@@ -16,6 +16,21 @@
             <p x-show="entry.syncError" x-text="entry.syncError"
                class="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-800"></p>
 
+            <div x-show="photos.length" class="mt-5 grid grid-cols-2 gap-2">
+                <template x-for="photo in photos" :key="photo.id">
+                    <button type="button" class="relative aspect-square overflow-hidden rounded-xl bg-peat-100" @click="enlarged = photo">
+                        <img :src="photoUrl(photo)" alt="" class="size-full object-cover">
+                        <span x-show="photo.syncStatus !== 'synced'"
+                              class="absolute bottom-1 left-1 rounded-full bg-bracken-500 px-2 py-0.5 text-[11px] font-semibold text-white">On device</span>
+                    </button>
+                </template>
+            </div>
+
+            <div x-show="enlarged" x-cloak class="fixed inset-0 z-40 flex items-center justify-center bg-black/90 p-4" @click="enlarged = null"
+                 @keydown.escape.window="enlarged = null" role="dialog" aria-label="Photo">
+                <img :src="enlarged ? photoUrl(enlarged, 'blob') : ''" alt="" class="max-h-full max-w-full rounded-lg">
+            </div>
+
             <p x-show="entry.notes" x-text="entry.notes" class="mt-5 whitespace-pre-line text-lg leading-relaxed"></p>
 
             <dl class="mt-6 grid grid-cols-2 gap-3 text-sm">

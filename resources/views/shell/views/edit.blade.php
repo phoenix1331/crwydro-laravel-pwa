@@ -4,9 +4,9 @@
     <h1 class="mb-4 text-2xl font-bold">Edit entry</h1>
 
     <form class="space-y-5" @submit.prevent="save" x-show="! missing">
-        @include('shell.partials.entry-fields', ['prefix' => 'edit'])
+        @include('shell.partials.entry-fields', ['prefix' => 'edit', 'existing' => true])
 
-        <button type="submit" class="btn-primary w-full" :disabled="saving">Save changes</button>
+        <button type="submit" class="btn-primary w-full" :disabled="saving || resizing">Save changes</button>
     </form>
 
     <p x-show="missing" class="text-peat-600">This entry no longer exists on this device.</p>
