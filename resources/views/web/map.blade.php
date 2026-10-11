@@ -10,7 +10,10 @@
             <div class="border-b border-peat-200 p-4">
                 <h1 class="text-xl font-bold">Your entries</h1>
                 <p class="text-sm text-peat-600">{{ count($entries) }} synced {{ Str::plural('entry', count($entries)) }}</p>
-                <div id="exports" class="mt-3 flex gap-2"></div>
+                <div class="mt-3 flex gap-2">
+                    <a href="{{ route('export.gpx') }}" class="btn-secondary min-h-10 px-4 text-sm">Download GPX</a>
+                    <a href="{{ route('export.csv') }}" class="btn-secondary min-h-10 px-4 text-sm">Download CSV</a>
+                </div>
             </div>
 
             @if (count($entries) === 0)

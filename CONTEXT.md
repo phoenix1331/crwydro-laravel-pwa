@@ -150,4 +150,5 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | `GET/POST /login`, `POST /logout` | Session auth (`Web\SessionController`), separate from the PWA's Sanctum tokens; `/login` is a real path, unrelated to the app's `#/login` |
 | `GET /map` | `Web\MapController`: the walker's synced, non-deleted entries as JSON in the page (`MapEntryResource`), drawn by `resources/js/web-map.js` (Leaflet) with their walks' routes |
 | `GET /photos/{photo}/{variant?}` | Streams `full` or `thumb` from the private photos disk to the owner only (404 otherwise); thumb falls back to full until the queued job has run |
+| `GET /export/entries.{gpx,csv}` (web) and `/api/export/entries.{gpx,csv}` (token) | `ExportController` via `App\Exports\EntryExporter`: GPX 1.1 waypoints for located entries; CSV of all entries with photo count; free text prefixed with `'` if it starts with `= + - @` (CSV injection guard) |
 | Times | Stored UTC; server views render in `crwydro.display_timezone` (`Europe/London`) |

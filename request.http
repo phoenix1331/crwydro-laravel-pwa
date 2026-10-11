@@ -79,3 +79,15 @@ Content-Type: image/jpeg
 Authorization: Bearer {{token}}
 
 < ./tests/Fixtures/photo.jpg
+
+### Export
+
+# Download every synced entry with a location as GPX waypoints
+GET {{baseUrl}}/api/export/entries.gpx
+Authorization: Bearer {{token}}
+
+###
+
+# Download every synced entry as CSV, one row per entry with a photo count
+GET {{baseUrl}}/api/export/entries.csv
+Authorization: Bearer {{token}}

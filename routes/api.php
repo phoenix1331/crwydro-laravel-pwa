@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Api\EntryController;
 use App\Http\Controllers\Api\EntryPhotoController;
 use App\Http\Controllers\Api\LoginController;
+use App\Http\Controllers\ExportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
 
     Route::put('/entries/{entryId}/photos/{photoId}', [EntryPhotoController::class, 'update'])
         ->whereUlid(['entryId', 'photoId']);
+
+    Route::get('/export/entries.gpx', [ExportController::class, 'gpx']);
+    Route::get('/export/entries.csv', [ExportController::class, 'csv']);
 });

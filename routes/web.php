@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\Web\MapController;
 use App\Http\Controllers\Web\PhotoController;
 use App\Http\Controllers\Web\SessionController;
@@ -22,4 +23,6 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/photos/{photo}/{variant?}', PhotoController::class)
         ->whereIn('variant', ['full', 'thumb'])
         ->name('photos.show');
+    Route::get('/export/entries.gpx', [ExportController::class, 'gpx'])->name('export.gpx');
+    Route::get('/export/entries.csv', [ExportController::class, 'csv'])->name('export.csv');
 });
