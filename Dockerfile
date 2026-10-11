@@ -23,7 +23,7 @@ RUN apt-get update \
 
 RUN groupadd --gid ${GID} ${USER} \
     && useradd --uid ${UID} --gid ${GID} --create-home ${USER} \
-    && chown -R ${USER}:${USER} /config/caddy /data/caddy
+    && chown -R ${USER}:${USER} /config /data
 
 ENV SERVER_NAME=:8000
 

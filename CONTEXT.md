@@ -36,13 +36,21 @@ All artisan, composer and test commands run inside the container: `docker compos
 | Redis for queue, cache and sessions | Queued thumbnail and EXIF jobs; one fast backing service |
 | MySQL | Project default stack |
 | Alpine.js over Vue | Views are small; revisit if they grow |
+| Millisecond timestamps on `entries` (`$dateFormat = 'Y-m-d H:i:s.v'`, precision 3 columns) | Eloquent drops ms by default; last-write-wins and pull cursors need them |
 
 ## Auth
 
 | Item | Detail |
 |------|--------|
 | Login | `POST /api/login` with `email`, `password`, `device_name`; returns `token` and `user` |
-| Token | Sanctum personal access token, `sanctum.expiration` null (never expires); one token per device name |
+| Token | Sanctum personal access token, `sanctum.expiration` null (never expires); new token per login, named by `device_name` |
 | Guard | `auth:sanctum` on all `/api/*` routes except `login` and `ping` |
 | Throttle | `throttle:10,1` on login |
 | Demo user | `walker@crwydro.test` / `password` (seeded) |
+
+## Data model
+
+| Table | Key columns |
+|-------|-------------|
+| `entries` | ULID `id` (client-minted), `user_id`, `title`, `notes`, `tag` (`App\Enums\Tag`), `lat`, `lng`, `accuracy_m`, `altitude_m`, `recorded_at`, `client_updated_at`, soft deletes; index `user_id, updated_at` |
+| `entry_photos` | ULID `id` (client-minted), `entry_id`, `path`, `thumb_path`, `width`, `height`, `bytes` |
