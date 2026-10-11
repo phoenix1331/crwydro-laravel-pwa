@@ -3,7 +3,8 @@ import { deleteEntry, getEntry, listEntries, updateEntry } from '../data/entries
 import { addPhotos, coverPhotos, photosFor, removeUnsyncedPhoto } from '../data/photos';
 import { fetchFullPhoto } from '../sync/pull';
 import { TAGS, tagLabel } from '../data/tags';
-import { formatCoords, formatDateTime, formatRelative, SYNC_BADGES } from './format';
+import { t } from '../i18n';
+import { formatCoords, formatDateTime, formatRelative, localised, syncBadge } from './format';
 import { photoUrl } from './object-urls';
 import { photoPicker } from './photo-picker';
 import { walkFields } from './walk-fields';
@@ -11,11 +12,11 @@ import { walkLabel } from '../data/walks';
 import { osGridRef } from '../data/osgrid';
 
 const helpers = {
-    tagLabel,
-    formatDateTime,
-    formatRelative,
+    tagLabel: localised(tagLabel),
+    formatDateTime: localised(formatDateTime),
+    formatRelative: localised(formatRelative),
     formatCoords,
-    badge: (status) => SYNC_BADGES[status] ?? SYNC_BADGES.local,
+    badge: localised(syncBadge),
     photoUrl,
     walkLabel,
     osGridRef,
@@ -129,13 +130,13 @@ export function entryDetail() {
         },
 
         async remove() {
-            if (!confirm('Delete this entry? It will also be removed from the server when you next sync.')) {
+            if (!confirm(t('entry.delete_confirm'))) {
                 return;
             }
 
             await deleteEntry(this.entry.id);
             window.dispatchEvent(new CustomEvent('crwydro:sync-requested'));
-            this.$store.toast.show('Entry deleted.');
+            this.$store.toast.show(t('entry.deleted'));
             this.$store.router.go('/');
         },
     };
@@ -199,12 +200,12 @@ export function entryEdit() {
 
             this.saving = false;
             window.dispatchEvent(new CustomEvent('crwydro:sync-requested'));
-            this.$store.toast.show('Changes saved on this device.', 'success');
+            this.$store.toast.show(t('form.changes_saved'), 'success');
             this.$store.router.go(`/entries/${this.id}`);
         },
 
         async removePhoto(photo) {
-            if (confirm('Remove this photo? It has not been uploaded yet.')) {
+            if (confirm(t('photos.remove_confirm'))) {
                 await removeUnsyncedPhoto(photo.id);
             }
         },

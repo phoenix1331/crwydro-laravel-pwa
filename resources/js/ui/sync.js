@@ -2,6 +2,7 @@ import Alpine from 'alpinejs';
 import { liveQuery } from 'dexie';
 import { db, getMeta } from '../data/db';
 import { SYNC_FAILED, SYNC_SYNCED } from '../data/entries';
+import { t } from '../i18n';
 import { backgroundSyncSupported, requestBackgroundSync } from '../sync/background';
 import {
     nextRetryAt,
@@ -13,10 +14,11 @@ import {
     runSync,
 } from '../sync/processor';
 
+// Translation keys rather than sentences, so a language switch re-translates the message
 const MESSAGES = {
-    [RESULT_OFFLINE]: "Can't reach the server yet. Crwydro will try again when signal returns.",
-    [RESULT_INTERRUPTED]: 'Signal dropped mid-sync. Nothing was lost; it will pick up where it left off.',
-    [RESULT_AUTH_REQUIRED]: 'Log in again to carry on syncing.',
+    [RESULT_OFFLINE]: 'sync.offline',
+    [RESULT_INTERRUPTED]: 'sync.interrupted',
+    [RESULT_AUTH_REQUIRED]: 'sync.auth',
 };
 
 /**
@@ -72,7 +74,7 @@ export function syncStore() {
                 this.running = false;
             }
 
-            this.lastMessage = MESSAGES[result.status] ?? (result.status === 'error' ? 'Sync hit an unexpected error.' : null);
+            this.lastMessage = MESSAGES[result.status] ?? (result.status === 'error' ? 'sync.error' : null);
 
             if (reason === 'manual') {
                 this.announce(result);
@@ -84,13 +86,14 @@ export function syncStore() {
         // Failures already show on the Sync view, which is where Sync now lives
         announce(result) {
             if (result.status === RESULT_DONE) {
-                const parts = [`${result.sent} sent`];
+                const parts = [t('sync.sent', { count: result.sent })];
+                const updated = (result.pull?.applied ?? 0) + (result.pull?.deleted ?? 0);
 
-                if (result.pull?.applied || result.pull?.deleted) parts.push(`${result.pull.applied + result.pull.deleted} updated from the server`);
-                if (result.failed) parts.push(`${result.failed} failed`);
-                if (result.deferred) parts.push(`${result.deferred} waiting to retry`);
+                if (updated) parts.push(t('sync.updated', { count: updated }));
+                if (result.failed) parts.push(t('sync.failed', { count: result.failed }));
+                if (result.deferred) parts.push(t('sync.waiting', { count: result.deferred }));
 
-                Alpine.store('toast').show(`Sync finished: ${parts.join(', ')}.`, result.failed ? 'warning' : 'success');
+                Alpine.store('toast').show(t('sync.finished', { parts: parts.join(', ') }), result.failed ? 'warning' : 'success');
 
                 return;
             }

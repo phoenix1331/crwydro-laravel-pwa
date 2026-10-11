@@ -1,5 +1,6 @@
 import { liveQuery } from 'dexie';
 import { authState, login } from '../data/auth';
+import { t } from '../i18n';
 
 export function authStore() {
     return {
@@ -31,7 +32,7 @@ export function loginForm() {
                 const user = await login(this.email.trim(), this.password);
 
                 this.password = '';
-                this.$store.toast.show(`Logged in as ${user.name}.`, 'success');
+                this.$store.toast.show(t('login.logged_in', { name: user.name }), 'success');
                 window.dispatchEvent(new CustomEvent('crwydro:sync-requested'));
                 this.$store.router.go('/sync');
             } catch (error) {

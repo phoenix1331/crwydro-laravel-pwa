@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { db, setMeta } from './db';
 import { createApi, errorMessage, NetworkError } from '../sync/api';
 
@@ -20,14 +21,14 @@ export async function login(email, password, { fetch: fetchImpl } = {}) {
         });
     } catch (error) {
         if (error instanceof NetworkError) {
-            throw new Error('Logging in needs a signal. Your entries are safe on this device until then.');
+            throw new Error(t('login.needs_signal'));
         }
 
         throw error;
     }
 
     if (!response.ok) {
-        throw new Error(response.status === 429 ? 'Too many attempts. Wait a minute and try again.' : errorMessage(response));
+        throw new Error(response.status === 429 ? t('login.too_many') : errorMessage(response));
     }
 
     await db.transaction('rw', db.meta, async () => {

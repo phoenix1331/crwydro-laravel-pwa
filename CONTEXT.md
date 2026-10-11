@@ -185,3 +185,15 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Accessibility | Every token pairing passes WCAG AA (4.5:1) in both themes; visible `:focus-visible` ring; skip link to `#content`; photo viewer traps Tab, supports arrow keys and Escape, and returns focus to the opener; reduced motion respected |
 | Visual QA | Sweep every view at 390, 768, 1280, 1440 in light and dark, checking for horizontal overflow (Playwright) |
 | Avoid | Middle-dot metadata strings, arrows appended to links, all-caps labels, `font-semibold` (600 is not loaded) |
+
+## Language (Welsh and English)
+
+| Item | Detail |
+|------|--------|
+| Source | `lang/en/app.php` and `lang/cy/app.php`; Pest checks both have the same keys and placeholders |
+| Offline | `php artisan crwydro:export-lang` writes `resources/js/lang/{en,cy}.json` (gitignored); npm `prebuild`, `predev` and `pretest` run it, so translations are bundled and precached |
+| Client | `resources/js/i18n.js` (`t()`, no Alpine, safe in the service worker); `resources/js/ui/language.js` store `$store.i18n` plus `$t()` magic; helpers wrapped with `localised()` re-render on a switch |
+| Choice | Saved in `localStorage` (`crwydro.locale`), default from the browser language; mirrored to the unencrypted `crwydro_locale` cookie |
+| Server pages | `SetLocaleFromCookie` middleware on the web group, so `/login` and `/map` match the app |
+| Place names | Welsh first with English in brackets in both languages; tag names and walk notes follow the chosen language |
+| Review | Welsh copy was written without a native speaker; get it reviewed before release |

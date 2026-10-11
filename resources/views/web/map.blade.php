@@ -1,6 +1,6 @@
 @extends('web.layout', ['scripts' => ['resources/js/web-map.js']])
 
-@section('title', 'Map')
+@section('title', __('app.web.map_title'))
 
 @section('content')
     <div class="min-h-dvh md:grid md:grid-cols-[15.5rem_minmax(0,1fr)]">
@@ -11,9 +11,9 @@
             </a>
 
             <div class="hidden flex-col gap-2 md:flex">
-                <p class="text-sm font-bold text-panel-muted">Download your entries</p>
-                <a href="{{ route('export.gpx') }}" class="inline-flex min-h-11 items-center rounded-control bg-panel-line px-3 font-bold hover:bg-panel-muted/30">GPX for mapping apps</a>
-                <a href="{{ route('export.csv') }}" class="inline-flex min-h-11 items-center rounded-control bg-panel-line px-3 font-bold hover:bg-panel-muted/30">CSV for spreadsheets</a>
+                <p class="text-sm font-bold text-panel-muted">{{ __('app.web.download') }}</p>
+                <a href="{{ route('export.gpx') }}" class="inline-flex min-h-11 items-center rounded-control bg-panel-line px-3 font-bold hover:bg-panel-muted/30">{{ __('app.web.gpx') }}</a>
+                <a href="{{ route('export.csv') }}" class="inline-flex min-h-11 items-center rounded-control bg-panel-line px-3 font-bold hover:bg-panel-muted/30">{{ __('app.web.csv') }}</a>
             </div>
 
             <div class="flex items-center gap-3 md:mt-auto md:flex-col md:items-stretch md:rounded-card md:border md:border-panel-line md:bg-panel/80 md:p-4 md:text-sm">
@@ -23,7 +23,7 @@
                 </p>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="inline-flex min-h-10 items-center rounded-control bg-panel-line px-3 text-sm font-bold hover:bg-panel-muted/30">Log out</button>
+                    <button type="submit" class="inline-flex min-h-10 items-center rounded-control bg-panel-line px-3 text-sm font-bold hover:bg-panel-muted/30">{{ __('app.web.log_out') }}</button>
                 </form>
             </div>
         </aside>
@@ -34,8 +34,8 @@
             <details class="group bg-surface lg:overflow-y-auto lg:border-l lg:border-line" open>
                 <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 border-b border-line px-4 py-3 lg:cursor-default">
                     <span>
-                        <span class="block text-xl font-extrabold tracking-[-0.02em]">Your entries</span>
-                        <span class="hint">{{ count($entries) }} synced {{ Str::plural('entry', count($entries)) }}</span>
+                        <span class="block text-xl font-extrabold tracking-[-0.02em]">{{ __('app.web.your_entries') }}</span>
+                        <span class="hint">{{ trans_choice('app.web.synced_count', count($entries), ['count' => count($entries)]) }}</span>
                     </span>
                     <span class="text-muted transition-transform group-open:rotate-90 lg:hidden" aria-hidden="true">
                         @include('shell.icon', ['name' => 'back', 'class' => 'size-5 rotate-180'])
@@ -43,12 +43,12 @@
                 </summary>
 
                 <div class="flex gap-2 border-b border-line p-4 md:hidden">
-                    <a href="{{ route('export.gpx') }}" class="btn-secondary min-h-10 flex-1 px-3 text-sm">Download GPX</a>
-                    <a href="{{ route('export.csv') }}" class="btn-secondary min-h-10 flex-1 px-3 text-sm">Download CSV</a>
+                    <a href="{{ route('export.gpx') }}" class="btn-secondary min-h-10 flex-1 px-3 text-sm">{{ __('app.web.download_gpx') }}</a>
+                    <a href="{{ route('export.csv') }}" class="btn-secondary min-h-10 flex-1 px-3 text-sm">{{ __('app.web.download_csv') }}</a>
                 </div>
 
                 @if (count($entries) === 0)
-                    <p class="hint p-4">Nothing synced yet. Entries appear here once your phone has had a signal.</p>
+                    <p class="hint p-4">{{ __('app.web.nothing_synced') }}</p>
                 @endif
 
                 <ul id="entry-list" class="divide-y divide-line">
@@ -65,8 +65,8 @@
                                 <span class="min-w-0">
                                     <span class="line-clamp-2 font-bold leading-snug">{{ $entry['title'] }}</span>
                                     <span class="mt-0.5 flex flex-wrap gap-x-3 text-sm text-muted">
-                                        <span>{{ ucfirst($entry['tag']->value) }}</span>
-                                        <span>{{ \Illuminate\Support\Carbon::parse($entry['recorded_at'])->setTimezone(config('crwydro.display_timezone'))->format('j M Y, H:i') }}</span>
+                                        <span>{{ __('app.tags.'.$entry['tag']->value) }}</span>
+                                        <span>{{ \Illuminate\Support\Carbon::parse($entry['recorded_at'])->setTimezone(config('crwydro.display_timezone'))->locale(app()->getLocale())->translatedFormat('j M Y, H:i') }}</span>
                                     </span>
                                 </span>
                             </button>

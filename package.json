@@ -3,9 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "lang": "php artisan crwydro:export-lang",
+    "prebuild": "npm run lang",
     "build": "vite build",
+    "predev": "npm run lang",
     "dev": "vite",
     "prepare": "husky",
+    "pretest": "npm run lang",
     "test": "vitest run",
     "test:watch": "vitest"
   },

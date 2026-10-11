@@ -5,10 +5,10 @@
 
         <a href="#/sync" x-data class="flex min-h-10 items-center gap-2 rounded-full px-3 text-sm font-bold"
            :class="$store.sync.unsynced ? 'bg-warn-soft text-warn' : 'bg-panel-line text-panel-ink'"
-           :aria-label="$store.sync.unsynced ? `${$store.sync.unsynced} entries not yet synced` : 'All entries synced'">
+           :aria-label="$store.sync.unsynced ? $t('status.count_on_device', { count: $store.sync.unsynced }) : $t('status.all_synced')">
             <span x-show="$store.sync.running" x-cloak>@include('shell.icon', ['name' => 'spinner', 'class' => 'size-4 animate-spin', 'stroke' => 2.5])</span>
-            <span x-show="$store.sync.unsynced" x-text="`${$store.sync.unsynced} on this device`"></span>
-            <span x-show="! $store.sync.unsynced" x-cloak>All synced</span>
+            <span x-show="$store.sync.unsynced" x-text="$t('status.count_on_device', { count: $store.sync.unsynced })"></span>
+            <span x-show="! $store.sync.unsynced" x-cloak x-text="$t('status.all_synced')">All synced</span>
         </a>
     </div>
 </header>

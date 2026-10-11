@@ -2,15 +2,15 @@
 <section x-data="entryList" x-show="$store.router.is('entries', 'entry')" x-cloak
          :class="$store.router.is('entry') && 'max-lg:hidden'" class="min-w-0">
     <div class="flex items-end justify-between gap-4">
-        <h1 class="text-3xl">Entries</h1>
-        <p class="hint hidden pb-1 md:block" x-show="entries.length" x-text="`${entries.length} on this device`"></p>
+        <h1 class="text-3xl" x-text="$t('entries.title')">Entries</h1>
+        <p class="hint hidden pb-1 md:block" x-show="entries.length" x-text="$t('status.count_on_device', { count: entries.length })"></p>
     </div>
 
-    <div class="no-scrollbar -mx-4 mt-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0" role="group" aria-label="Filter by tag">
-        <button type="button" class="chip" :class="filter === null && 'chip-on'" :aria-pressed="filter === null" @click="filter = null">All</button>
+    <div class="no-scrollbar -mx-4 mt-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0" role="group" :aria-label="$t('entries.filter')" aria-label="Filter by tag">
+        <button type="button" class="chip" :class="filter === null && 'chip-on'" :aria-pressed="filter === null" @click="filter = null" x-text="$t('entries.all')">All</button>
         <template x-for="option in tags" :key="option.key">
             <button type="button" class="chip" :class="filter === option.key && 'chip-on'" :aria-pressed="filter === option.key"
-                    @click="filter = option.key" x-text="option.en"></button>
+                    @click="filter = option.key" x-text="option[$store.i18n.locale]"></button>
         </template>
     </div>
 
@@ -44,12 +44,12 @@
     </ul>
 
     <div x-show="loaded && ! entries.length && filter" x-cloak class="card border-dashed p-6 text-center text-muted">
-        No <span x-text="filter ? tagLabel(filter).toLowerCase() : ''"></span> entries yet.
+        <span x-text="filter ? $t('entries.none_for_tag', { tag: tagLabel(filter).toLowerCase() }) : ''"></span>
     </div>
 
     <div x-show="loaded && ! entries.length && ! filter" x-cloak class="card border-dashed p-8 text-center">
-        <p class="text-lg font-bold">No entries yet</p>
-        <p class="hint mt-1">Spotted something on the hill? Log it, signal or not.</p>
-        <a href="#/entries/new" class="btn-primary mt-5">Add your first entry</a>
+        <p class="text-lg font-bold" x-text="$t('entries.empty_title')">No entries yet</p>
+        <p class="hint mt-1" x-text="$t('entries.empty_body')">Spotted something on the hill? Log it, signal or not.</p>
+        <a href="#/entries/new" class="btn-primary mt-5" x-text="$t('entries.empty_cta')">Add your first entry</a>
     </div>
 </section>

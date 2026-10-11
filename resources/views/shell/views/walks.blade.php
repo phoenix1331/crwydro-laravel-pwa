@@ -1,6 +1,6 @@
 <section x-data="walkList" x-show="$store.router.is('walks')" x-cloak class="mx-auto max-w-6xl">
-    <h1 class="text-3xl">Walks</h1>
-    <p class="hint mt-1 max-w-[60ch]">Featured routes are saved on this device, so you can attach entries to them with no signal.</p>
+    <h1 class="text-3xl" x-text="$t('walks.title')">Walks</h1>
+    <p class="hint mt-1 max-w-[60ch]" x-text="$t('walks.intro')">Featured routes are saved on this device, so you can attach entries to them with no signal.</p>
 
     <template x-for="area in areas" :key="area.key">
         <section class="mt-10" :aria-labelledby="`area-${area.key}`">
@@ -18,15 +18,15 @@
                         <div class="flex flex-1 flex-col p-4">
                             <p class="text-lg font-extrabold leading-snug" x-text="walk.cy"></p>
                             <p class="hint" x-text="walk.en"></p>
-                            <p class="mt-2 flex-1 text-sm" x-text="walk.note"></p>
-                            <a :href="`#/map/${walk.id}`" class="btn-quiet mt-3 self-start">Show on map</a>
+                            <p class="mt-2 flex-1 text-sm" x-text="walkNote(walk)"></p>
+                            <a :href="`#/map/${walk.id}`" class="btn-quiet mt-3 self-start" x-text="$t('walks.show_on_map')">Show on map</a>
                         </div>
                     </li>
                 </template>
             </ul>
 
             <div class="mt-4">
-                <p class="label">Look out for</p>
+                <p class="label" x-text="$t('walks.look_out')">Look out for</p>
                 <ul class="flex flex-wrap gap-2 text-sm">
                     <template x-for="item in area.lookOut" :key="item.cy">
                         <li class="rounded-full border border-line bg-surface px-3 py-1.5">
@@ -39,5 +39,5 @@
         </section>
     </template>
 
-    <p class="hint mt-10 text-xs">Route lines &copy; <a href="https://www.openstreetmap.org/copyright" class="underline">OpenStreetMap contributors</a>, ODbL.</p>
+    <p class="hint mt-10 text-xs"><span x-text="$t('walks.attribution')">Route lines</span> &copy; <a href="https://www.openstreetmap.org/copyright" class="underline">OpenStreetMap contributors</a>, ODbL.</p>
 </section>

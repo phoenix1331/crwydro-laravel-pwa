@@ -1,4 +1,5 @@
 import { MAX_PHOTOS } from '../data/photos';
+import { t } from '../i18n';
 import { blobUrl, revokeUrl } from './object-urls';
 import { resizePhoto } from './resize';
 
@@ -26,7 +27,7 @@ export function photoPicker() {
             this.photoError = null;
 
             if (files.length > this.remaining()) {
-                this.photoError = `Up to ${MAX_PHOTOS} photos per entry.`;
+                this.photoError = t('photos.too_many', { max: MAX_PHOTOS });
             }
 
             this.resizing = true;
@@ -39,7 +40,7 @@ export function photoPicker() {
                     this.pending.push({ ...photo, key, url: blobUrl(key, photo.thumb) });
                 }
             } catch {
-                this.photoError = "That photo couldn't be read. Try another.";
+                this.photoError = t('photos.unreadable');
             } finally {
                 this.resizing = false;
             }

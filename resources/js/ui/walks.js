@@ -1,4 +1,5 @@
-import { AREAS, LOOK_OUT, routeUrl, WALKS } from '../data/walks';
+import { AREAS, LOOK_OUT, routeUrl, walkNote, WALKS } from '../data/walks';
+import { localised } from './format';
 
 /**
  * Turn a route's GeoJSON into an SVG path that fits a small box, keeping
@@ -34,6 +35,7 @@ export function routeSketch(geojson, width = 160, height = 96, pad = 6) {
 export function walkList() {
     return {
         sketches: {},
+        walkNote: localised(walkNote),
         areas: Object.entries(AREAS).map(([key, area]) => ({
             key,
             ...area,

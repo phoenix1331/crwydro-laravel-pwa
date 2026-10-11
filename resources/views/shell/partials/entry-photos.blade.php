@@ -1,5 +1,5 @@
 <div>
-    <p class="label">Photos <span class="font-normal text-muted">(up to 4)</span></p>
+    <p class="label"><span x-text="$t('photos.label')">Photos</span> <span class="font-normal text-muted" x-text="$t('photos.limit')">(up to 4)</span></p>
 
     <div class="grid grid-cols-4 gap-2">
         @if ($existing ?? false)
@@ -8,7 +8,7 @@
                     <img :src="photoUrl(photo)" alt="" class="size-full object-cover">
                     <button type="button" x-show="photo.syncStatus !== 'synced'" @click="removePhoto(photo)"
                             class="absolute top-1 right-1 flex size-8 items-center justify-center rounded-full bg-black/70 text-white"
-                            aria-label="Remove photo">&times;</button>
+                            :aria-label="$t('photos.remove')" aria-label="Remove photo">&times;</button>
                 </div>
             </template>
         @endif
@@ -18,12 +18,12 @@
                 <img :src="photo.url" alt="" class="size-full object-cover">
                 <button type="button" @click="removePending(photo.key)"
                         class="absolute top-1 right-1 flex size-8 items-center justify-center rounded-full bg-black/70 text-white"
-                        aria-label="Remove photo">&times;</button>
+                        :aria-label="$t('photos.remove')" aria-label="Remove photo">&times;</button>
             </div>
         </template>
 
         <div x-show="resizing" x-cloak class="flex aspect-square items-center justify-center rounded-control bg-sunk text-xs font-bold text-muted">
-            Resizing…
+            <span x-text="$t('photos.resizing')">Resizing…</span>
         </div>
     </div>
 
@@ -33,11 +33,11 @@
             <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">
                 <path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" />
             </svg>
-            <span class="md:hidden">Take photo</span><span class="hidden md:inline">Camera</span>
+            <span class="md:hidden" x-text="$t('photos.take')">Take photo</span><span class="hidden md:inline" x-text="$t('photos.camera')">Camera</span>
         </label>
         <label class="btn-secondary cursor-pointer has-focus-visible:outline-3 has-focus-visible:outline-accent">
             <input type="file" accept="image/*" multiple class="sr-only" @change="pick">
-            <span class="md:hidden">Choose</span><span class="hidden md:inline">Choose files</span>
+            <span class="md:hidden" x-text="$t('photos.choose')">Choose</span><span class="hidden md:inline" x-text="$t('photos.choose_files')">Choose files</span>
         </label>
     </div>
 

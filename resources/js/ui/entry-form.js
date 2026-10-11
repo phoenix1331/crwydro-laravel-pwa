@@ -1,17 +1,11 @@
 import { getMeta, setMeta } from '../data/db';
+import { t } from '../i18n';
 import { createEntry } from '../data/entries';
 import { TAGS } from '../data/tags';
 import { nowIso } from '../data/time';
 import { walkFields } from './walk-fields';
 import { getPosition } from './geo';
 import { photoPicker } from './photo-picker';
-
-const LOCATION_MESSAGES = {
-    denied: 'Saved without location: location access is turned off for Crwydro.',
-    unavailable: 'Saved without location: no GPS fix yet.',
-    unsupported: 'Saved without location: this device has no GPS.',
-    skipped: 'Saved without location.',
-};
 
 export function entryForm() {
     return {
@@ -41,7 +35,7 @@ export function entryForm() {
 
         async save() {
             if (!this.title.trim()) {
-                this.error = 'Give it a title, even a short one.';
+                this.error = t('form.title_required');
 
                 return;
             }
@@ -76,7 +70,7 @@ export function entryForm() {
 
             await setMeta('lastRouteId', this.routeId || null);
             window.dispatchEvent(new CustomEvent('crwydro:sync-requested'));
-            this.$store.toast.show(location ? 'Saved on this device.' : LOCATION_MESSAGES[reason], location ? 'success' : 'warning');
+            this.$store.toast.show(location ? t('form.saved') : t(`form.saved_without_location.${reason}`), location ? 'success' : 'warning');
             this.reset();
             this.$store.router.go('/');
         },

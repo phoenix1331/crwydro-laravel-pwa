@@ -21,7 +21,7 @@
 </head>
 <body class="min-h-dvh">
     <a href="#content" class="sr-only z-50 rounded-control bg-accent px-4 py-3 font-bold text-accent-ink focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
-       @click.prevent="document.getElementById('content').focus()" x-data>Skip to content</a>
+       @click.prevent="document.getElementById('content').focus()" x-data x-text="$t('skip')">Skip to content</a>
     <div class="min-h-dvh md:grid md:grid-cols-[15.5rem_minmax(0,1fr)]">
         @include('shell.sidebar')
 

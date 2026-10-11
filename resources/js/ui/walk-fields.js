@@ -1,4 +1,5 @@
-import { lookOutFor, walkLabel, WALKS } from '../data/walks';
+import { lookOutFor, walkLabel, walkNote, WALKS } from '../data/walks';
+import { localised } from './format';
 
 /**
  * Walk selector and "look out for" quick picks shared by the entry forms.
@@ -9,6 +10,7 @@ export function walkFields() {
         routeId: null,
         hint: null,
         walkLabel,
+        walkNote: localised(walkNote),
 
         quickPicks() {
             return lookOutFor(this.routeId);
@@ -17,7 +19,7 @@ export function walkFields() {
         pickSpecies(item) {
             this.title = `${item.cy} (${item.en})`;
             this.tag = item.tag;
-            this.hint = item.note ?? null;
+            this.hint = item.note ? walkNote(item) : null;
         },
     };
 }

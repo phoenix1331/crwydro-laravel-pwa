@@ -1,3 +1,5 @@
+import { locale } from '../i18n';
+
 /**
  * Featured walks, Welsh name first. Route lines are OpenStreetMap data
  * (ODbL) in public/routes/{id}.geojson, precached for offline use.
@@ -16,6 +18,7 @@ export const WALKS = [
         en: 'Snowdon via the Llanberis Path',
         area: 'eryri',
         note: 'The busiest mountain in Wales, and a good first test route.',
+        noteCy: 'Mynydd prysuraf Cymru, a llwybr prawf cyntaf da.',
     },
     {
         id: 'cwm-idwal',
@@ -23,6 +26,7 @@ export const WALKS = [
         en: 'Cwm Idwal, beneath Tryfan and the Glyderau',
         area: 'eryri',
         note: 'Rocky, remote cwm under Tryfan and the Glyderau: classic dead zone walking.',
+        noteCy: 'Cwm creigiog, anghysbell o dan Dryfan a’r Glyderau: cerdded clasurol heb signal.',
     },
     {
         id: 'cadair-idris-minffordd',
@@ -30,6 +34,7 @@ export const WALKS = [
         en: 'Cadair Idris via the Minffordd Path',
         area: 'eryri',
         note: 'Llyn Cau and the cwm make good photo stops.',
+        noteCy: 'Mae Llyn Cau a’r cwm yn lefydd da i aros am lun.',
     },
     {
         id: 'pen-y-fan-pont-ar-daf',
@@ -37,6 +42,7 @@ export const WALKS = [
         en: 'Pen y Fan from Pont ar Daf',
         area: 'bannau',
         note: 'Short and popular; signal comes and goes.',
+        noteCy: 'Byr a phoblogaidd; mae’r signal yn mynd a dod.',
     },
     {
         id: 'arfordir-penfro',
@@ -44,6 +50,7 @@ export const WALKS = [
         en: 'Pembrokeshire Coast Path',
         area: 'penfro',
         note: 'Coastal flowers and seabirds on the Wales Coast Path.',
+        noteCy: 'Blodau’r arfordir ac adar môr ar Lwybr Arfordir Cymru.',
     },
     {
         id: 'clawdd-offa',
@@ -51,6 +58,7 @@ export const WALKS = [
         en: "Offa's Dyke Path",
         area: 'canolbarth',
         note: 'Multi-day trek along the border.',
+        noteCy: 'Taith aml-ddiwrnod ar hyd y ffin.',
     },
     {
         id: 'llwybr-glyndwr',
@@ -58,6 +66,7 @@ export const WALKS = [
         en: "Glyndŵr's Way",
         area: 'canolbarth',
         note: 'Long, quiet and very little signal.',
+        noteCy: 'Hir, tawel a phrin iawn o signal.',
     },
 ];
 
@@ -67,7 +76,7 @@ export const WALKS = [
  */
 export const LOOK_OUT = {
     eryri: [
-        { cy: "Lili'r Wyddfa", en: 'Snowdon lily', tag: 'flower', note: 'Rare and protected: photograph only, never pick.' },
+        { cy: "Lili'r Wyddfa", en: 'Snowdon lily', tag: 'flower', note: 'Rare and protected: photograph only, never pick.', noteCy: 'Prin a gwarchodedig: tynnwch lun yn unig, peidiwch byth â’i chasglu.' },
         { cy: 'Pabi Cymreig', en: 'Welsh poppy', tag: 'flower' },
         { cy: 'Mwyalchen y mynydd', en: 'Ring ouzel', tag: 'bird' },
         { cy: 'Cigfran', en: 'Raven', tag: 'bird' },
@@ -109,6 +118,10 @@ export function lookOutFor(routeId) {
     const walk = walkById(routeId);
 
     return walk ? LOOK_OUT[walk.area] : Object.values(LOOK_OUT).flat().filter((item, index, all) => all.findIndex((other) => other.cy === item.cy) === index);
+}
+
+export function walkNote(walk) {
+    return locale() === 'cy' ? walk.noteCy ?? walk.note : walk.note;
 }
 
 export function routeUrl(id) {

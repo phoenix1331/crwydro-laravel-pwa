@@ -31,3 +31,4 @@ Thumbs.db
 /public/sw.js.map
 /public/workbox-*.js
 
+/resources/js/lang/*.json
