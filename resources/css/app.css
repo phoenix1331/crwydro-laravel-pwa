@@ -6,4 +6,54 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Peat, moss and bracken: high contrast for reading outdoors */
+    --color-peat-50: #f4f6f3;
+    --color-peat-100: #e3e8e1;
+    --color-peat-200: #c6d0c3;
+    --color-peat-400: #7d8f78;
+    --color-peat-600: #4a5a46;
+    --color-peat-800: #263123;
+    --color-peat-900: #172014;
+    --color-moss-500: #4f7a3a;
+    --color-moss-600: #3e6330;
+    --color-moss-700: #2f4c25;
+    --color-bracken-400: #e0913a;
+    --color-bracken-500: #c8741f;
+    --color-bracken-600: #a65c15;
+    --color-slate-mist: #dfe6ea;
+}
+
+@layer base {
+    html {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        @apply bg-peat-50 text-peat-900 antialiased;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@utility btn {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-base font-semibold transition active:scale-[0.98] disabled:opacity-50;
+}
+
+@utility btn-primary {
+    @apply btn bg-moss-600 text-white shadow-sm hover:bg-moss-700;
+}
+
+@utility btn-secondary {
+    @apply btn border border-peat-200 bg-white text-peat-800 hover:bg-peat-100;
+}
+
+@utility field {
+    @apply block min-h-12 w-full rounded-xl border border-peat-200 bg-white px-4 text-base text-peat-900 placeholder:text-peat-400 focus:border-moss-500 focus:ring-2 focus:ring-moss-500/30 focus:outline-none;
+}
+
+@utility label {
+    @apply mb-1.5 block text-sm font-semibold text-peat-800;
 }

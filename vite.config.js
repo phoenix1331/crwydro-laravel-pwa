@@ -10,13 +10,21 @@ export default defineConfig({
             refresh: true,
             fonts: [
                 bunny('Instrument Sans', {
-                    weights: [400, 500, 600],
+                    weights: [400, 500, 600, 700],
                 }),
             ],
         }),
         tailwindcss(),
     ],
     server: {
+        // Vite runs inside the app container; the browser reaches it through the published port
+        host: '0.0.0.0',
+        port: 5173,
+        strictPort: true,
+        hmr: {
+            host: 'localhost',
+        },
+        cors: true,
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },

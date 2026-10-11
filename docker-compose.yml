@@ -8,6 +8,7 @@ services:
     image: crwydro-app
     ports:
       - "${APP_PORT:-8000}:8000"
+      - "${VITE_PORT:-5173}:5173"
     volumes:
       - .:/app
     depends_on:

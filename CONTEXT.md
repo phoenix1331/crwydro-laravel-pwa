@@ -6,11 +6,13 @@ Offline-first, bilingual (Welsh/English) PWA field journal for walkers in the We
 
 | Service | Image | Host port | Notes |
 |---------|-------|-----------|-------|
-| `app` | `dunglas/frankenphp:php8.4` (see `Dockerfile`) | 8000 | Project mounted at `/app`, runs as host UID/GID |
+| `app` | `dunglas/frankenphp:php8.4` + Node 24 (see `Dockerfile`) | 8000, 5173 (Vite) | Project mounted at `/app`, runs as host UID/GID |
 | `mysql` | `mysql:8.4` | 3307 | 3306 is taken on the dev host; `FORWARD_DB_PORT` |
 | `redis` | `redis:7-alpine` | not exposed | Sessions, cache, queue |
 
-All artisan, composer and test commands run inside the container: `docker compose exec app ...`
+All artisan, composer, npm and test commands run inside the container: `docker compose exec app ...`
+
+`make dev` runs `php artisan dev` in the container. `AppServiceProvider` drops its `server` process (FrankenPHP already serves), leaving queue, logs and Vite. `make assets` builds for production and removes `public/hot`; offline and service worker testing needs a production build.
 
 ## Architecture at a glance
 
@@ -18,7 +20,8 @@ All artisan, composer and test commands run inside the container: `docker compos
 |------|---------|
 | `app/` | Laravel API and server-rendered views |
 | `routes/api.php` | JSON sync API (Sanctum token auth) |
-| `resources/js/` | PWA client: Dexie store, outbox processor, UI |
+| `resources/views/app.blade.php`, `resources/views/shell/` | Single app shell page; views toggle via Alpine stores |
+| `resources/js/` | PWA client: hash router (`router.js`), Dexie store, outbox processor, UI |
 | `docker-compose.yml`, `Dockerfile` | Containerised runtime |
 | `Makefile` | All developer commands |
 | `request.http` | Example API requests |
@@ -36,6 +39,8 @@ All artisan, composer and test commands run inside the container: `docker compos
 | Redis for queue, cache and sessions | Queued thumbnail and EXIF jobs; one fast backing service |
 | MySQL | Project default stack |
 | Photos stored at `photos/{user_id}/{entry_id}/{photo_id}.jpg` on `PHOTOS_DISK` (`config/crwydro.php`) | Deterministic path makes retries overwrite rather than orphan files; local in dev, S3 in production |
+| Hash routes (`/#/entries/new`) with one Blade shell at `/` | Only one HTML document to precache; every view works offline |
+| Fonts self-hosted via `laravel-vite-plugin/fonts` and `@fonts` | No third-party font request, so the shell renders identically offline |
 | Alpine.js over Vue | Views are small; revisit if they grow |
 | Millisecond timestamps on `entries` (`$dateFormat = 'Y-m-d H:i:s.v'`, precision 3 columns) | Eloquent drops ms by default; last-write-wins and pull cursors need them |
 

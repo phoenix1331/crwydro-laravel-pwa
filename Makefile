@@ -3,7 +3,7 @@
 DC = docker compose
 APP = $(DC) exec app
 
-.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test
+.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -49,3 +49,12 @@ lint: ## Fix code style with Pint
 
 lint-test: ## Check code style without fixing
 	@$(APP) ./vendor/bin/pint --test
+
+dev: ## Run artisan dev in the app container (queue, logs, Vite)
+	@$(APP) php artisan dev
+
+npm: ## Run an npm command in the app container, e.g. make npm cmd="install"
+	@$(APP) npm $(cmd)
+
+assets: ## Build front-end assets for production (stops the Vite dev server hot file)
+	@$(APP) sh -c "rm -f public/hot && npm run build"
