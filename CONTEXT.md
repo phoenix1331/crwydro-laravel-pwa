@@ -142,3 +142,12 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Substitution | No OSM relation exists for "Tryfan and the Glyderau", so `cwm-idwal` (OSM 19400332, beneath Tryfan and the Glyderau) stands in |
 | Entries | Optional `routeId` / `route_id`; the new entry form remembers the last walk in `meta.lastRouteId` |
 | Look out for | Bilingual quick picks per area in `walks.js`; picking one fills the title (Welsh first) and tag |
+
+## Server-rendered views
+
+| Route | Detail |
+|-------|--------|
+| `GET/POST /login`, `POST /logout` | Session auth (`Web\SessionController`), separate from the PWA's Sanctum tokens; `/login` is a real path, unrelated to the app's `#/login` |
+| `GET /map` | `Web\MapController`: the walker's synced, non-deleted entries as JSON in the page (`MapEntryResource`), drawn by `resources/js/web-map.js` (Leaflet) with their walks' routes |
+| `GET /photos/{photo}/{variant?}` | Streams `full` or `thumb` from the private photos disk to the owner only (404 otherwise); thumb falls back to full until the queued job has run |
+| Times | Stored UTC; server views render in `crwydro.display_timezone` (`Europe/London`) |

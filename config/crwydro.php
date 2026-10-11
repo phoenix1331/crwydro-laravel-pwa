@@ -18,6 +18,11 @@ return [
     'photos_per_entry' => 4,
 
     /*
+    | Times are stored in UTC; server-rendered views show them in UK time.
+    */
+    'display_timezone' => 'Europe/London',
+
+    /*
     | Featured walks an entry can be attached to. GeoJSON lives in
     | public/routes/{id}.geojson (OpenStreetMap data, ODbL).
     */
