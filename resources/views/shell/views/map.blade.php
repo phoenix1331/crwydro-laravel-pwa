@@ -1,6 +1,6 @@
 <section x-data="deviceMap" x-effect="show($store.router.name, $store.router.params.id)" x-show="$store.router.is('map')" x-cloak
-         class="-mx-4 -mt-4 -mb-28">
-    <div class="relative" style="height: calc(100dvh - 3.5rem - 4.5rem - env(safe-area-inset-top) - env(safe-area-inset-bottom))">
+         class="-mx-4 -mt-5 -mb-28 md:-mx-8 md:-mt-8 md:-mb-10 lg:-mx-10">
+    <div class="relative h-[calc(100dvh-8rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] md:h-dvh">
         <div x-ref="map" class="absolute inset-0 z-0 bg-sunk"></div>
 
         <div x-show="focusedWalk" x-cloak class="absolute top-3 left-3 right-16 z-[500] rounded-xl bg-surface/95 px-3 py-2 text-sm shadow">

@@ -1,4 +1,4 @@
-<section x-data="entryForm" x-show="$store.router.is('new')" x-cloak>
+<section x-data="entryForm" x-show="$store.router.is('new')" x-cloak class="mx-auto max-w-2xl">
     <h1 class="mb-4 text-2xl font-bold">New entry</h1>
 
     <form class="space-y-5" @submit.prevent="save">

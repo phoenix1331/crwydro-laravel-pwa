@@ -1,4 +1,4 @@
-<section x-data="loginForm" x-show="$store.router.is('login')" x-cloak>
+<section x-data="loginForm" x-show="$store.router.is('login')" x-cloak class="mx-auto max-w-md">
     <h1 class="text-2xl font-bold">Log in to sync</h1>
     <p class="mt-1 mb-5 text-muted">You can keep logging entries without an account. Logging in backs them up to the server.</p>
 

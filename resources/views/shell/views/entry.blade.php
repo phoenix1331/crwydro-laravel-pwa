@@ -1,4 +1,4 @@
-<section x-data="entryDetail" x-effect="load($store.router.name, $store.router.params.id)" x-show="$store.router.is('entry')" x-cloak>
+<section x-data="entryDetail" x-effect="load($store.router.name, $store.router.params.id)" x-show="$store.router.is('entry')" x-cloak class="mx-auto max-w-3xl">
     <template x-if="entry">
         <article>
             <a href="#/" class="mb-3 inline-flex min-h-10 items-center gap-1 text-sm font-bold text-accent"><svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg> Entries</a>

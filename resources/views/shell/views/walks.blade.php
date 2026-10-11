@@ -1,4 +1,4 @@
-<section x-data="walkList" x-show="$store.router.is('walks')" x-cloak>
+<section x-data="walkList" x-show="$store.router.is('walks')" x-cloak class="mx-auto max-w-5xl">
     <h1 class="text-2xl font-bold">Walks</h1>
     <p class="mt-1 mb-5 text-muted">Featured routes are saved on this device, so you can attach entries to them with no signal.</p>
 

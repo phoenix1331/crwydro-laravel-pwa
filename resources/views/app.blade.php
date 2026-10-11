@@ -20,22 +20,27 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-dvh">
-    <div class="mx-auto flex min-h-dvh max-w-xl flex-col">
-        @include('shell.header')
+    <div class="min-h-dvh md:grid md:grid-cols-[15.5rem_minmax(0,1fr)]">
+        @include('shell.sidebar')
 
-        <main class="flex-1 px-4 pt-4 pb-28">
-            @include('shell.views.entries')
-            @include('shell.views.new')
-            @include('shell.views.entry')
-            @include('shell.views.edit')
-            @include('shell.views.walks')
-            @include('shell.views.map')
-            @include('shell.views.sync')
-            @include('shell.views.login')
-        </main>
+        <div class="flex min-h-dvh min-w-0 flex-col">
+            @include('shell.header')
+            @include('shell.banners')
 
-        @include('shell.toast')
-        @include('shell.nav')
+            <main class="flex-1 px-4 pt-5 pb-28 md:px-8 md:pt-8 md:pb-10 lg:px-10">
+                @include('shell.views.entries')
+                @include('shell.views.new')
+                @include('shell.views.entry')
+                @include('shell.views.edit')
+                @include('shell.views.walks')
+                @include('shell.views.map')
+                @include('shell.views.sync')
+                @include('shell.views.login')
+            </main>
+        </div>
     </div>
+
+    @include('shell.toast')
+    @include('shell.nav')
 </body>
 </html>

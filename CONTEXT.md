@@ -21,7 +21,7 @@ All artisan, composer, npm and test commands run inside the container: `docker c
 |------|---------|
 | `app/` | Laravel API and server-rendered views |
 | `routes/api.php` | JSON sync API (Sanctum token auth) |
-| `resources/views/app.blade.php`, `resources/views/shell/` | Single app shell page; views toggle via Alpine stores |
+| `resources/views/app.blade.php`, `resources/views/shell/` | Single app shell page; views toggle via Alpine stores. Phone: `header` + `nav` (bottom); `md` and up: `sidebar`. Nav items come from a view composer in `AppServiceProvider`; icons from `shell/icon.blade.php` |
 | `resources/js/` | PWA client: hash router (`router.js`), Dexie store, outbox processor, UI |
 | `docker-compose.yml`, `Dockerfile` | Containerised runtime |
 | `Makefile` | All developer commands |
@@ -177,4 +177,5 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Type | Atkinson Hyperlegible Next; headings 800 with -0.02em tracking; tabular figures everywhere; 17px base on phones, 16px from 1024px |
 | Radius | `rounded-panel` 20, `rounded-card` 14, `rounded-control` 12, chips `rounded-full` |
 | Components | `@utility` classes: `btn`, `btn-primary`, `btn-secondary`, `btn-quiet`, `btn-danger`, `field`, `label`, `hint`, `card`, `chip`, `chip-on`, `notice`, `no-scrollbar` |
+| Breakpoints | Phone below `md` (768px): contour header, bottom nav with central New. `md`+: 15.5rem contour sidebar with New, nav and sync summary. `lg` (1024px)+: list and detail side by side |
 | Avoid | Middle-dot metadata strings, arrows appended to links, all-caps labels, `font-semibold` (600 is not loaded) |

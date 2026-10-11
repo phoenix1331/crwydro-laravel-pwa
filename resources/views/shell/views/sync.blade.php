@@ -1,4 +1,4 @@
-<section x-data x-show="$store.router.is('sync')" x-cloak>
+<section x-data x-show="$store.router.is('sync')" x-cloak class="mx-auto max-w-3xl">
     <h1 class="mb-4 text-2xl font-bold">Sync</h1>
 
     <div class="grid grid-cols-2 gap-3">

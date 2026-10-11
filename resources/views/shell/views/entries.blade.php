@@ -1,4 +1,4 @@
-<section x-data="entryList" x-show="$store.router.is('entries')" x-cloak>
+<section x-data="entryList" x-show="$store.router.is('entries')" x-cloak class="mx-auto max-w-3xl">
     <h1 class="mb-4 text-2xl font-bold">Entries</h1>
 
     <div class="no-scrollbar -mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Filter by tag">
