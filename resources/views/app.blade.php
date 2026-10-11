@@ -46,6 +46,7 @@
     </div>
 
     @include('shell.toast')
+    @include('shell.update-bar')
     @include('shell.nav')
 </body>
 </html>

@@ -278,3 +278,17 @@ describe('photo uploads', () => {
         expect(server.sent()[0]).not.toContain('/photos/');
     });
 });
+
+describe('api versions', () => {
+    it('sends its api version and keeps the outbox when the server says it is too old', async () => {
+        const entry = await createEntry({ title: 'Pabi', tag: 'flower' });
+        const server = fakeServer({ 'PUT ': [426, { message: 'This version of Crwydro is out of date.' }] });
+
+        const result = await processOutbox(options(server));
+
+        expect(result.status).toBe('update-required');
+        expect(server.calls[0].init.headers['X-Crwydro-Client-Api']).toBe('1');
+        expect(await db.outbox.count()).toBe(1);
+        expect((await db.entries.get(entry.id)).syncStatus).toBe('local');
+    });
+});

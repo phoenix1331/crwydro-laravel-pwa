@@ -111,3 +111,10 @@ Authorization: Bearer {{token}}
 # Download a photo's thumbnail (drop /thumb for the full image)
 GET {{baseUrl}}/api/photos/01K7A3RB4C6D8E0F2G4H6J8K0M/thumb
 Authorization: Bearer {{token}}
+
+### API versions
+
+# Every response carries X-Crwydro-Api; a client older than MIN_CLIENT_API gets 426
+GET {{baseUrl}}/api/ping
+Accept: application/json
+X-Crwydro-Client-Api: 1

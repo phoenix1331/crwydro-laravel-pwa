@@ -18,6 +18,14 @@ return [
     'photos_per_entry' => 4,
 
     /*
+    | API contract version sent on every response, and the oldest client
+    | version still accepted. Raise api_version for any change a cached client
+    | must know about; raise min_client_api when old clients must stop writing.
+    */
+    'api_version' => 1,
+    'min_client_api' => (int) env('MIN_CLIENT_API', 1),
+
+    /*
     | Times are stored in UTC; server-rendered views show them in UK time.
     */
     'display_timezone' => 'Europe/London',

@@ -47,7 +47,7 @@ All artisan, composer, npm and test commands run inside the container: `docker c
 | Fonts self-hosted via `laravel-vite-plugin/fonts` and `@fonts` (Atkinson Hyperlegible Next 400/700/800) | No third-party font request, so the shell renders identically offline |
 | Service worker via `vite-plugin-pwa` `injectManifest` (`resources/js/sw.js`) | Custom worker needed later for Background Sync; worker emitted to `public/sw.js` so its scope is `/` |
 | `/` shell precached with a per-build revision (`__BUILD_ID__`) | Server-rendered shell refreshes with each deploy alongside hashed assets |
-| `registerType: 'prompt'` (`resources/js/pwa.js`) | Never swap code under a walker mid-trip; they choose when to update |
+| `registerType: 'prompt'` (`resources/js/pwa.js`) | Never swap code under a walker mid-trip; an update bar offers Update or Later. Update checks run hourly, when the app becomes visible, and when the server reports a newer API |
 | Server re-encodes every photo in `App\Jobs\ProcessEntryPhoto` (Intervention Image v4, GD): strips EXIF, caps at 1600px, writes `{id}_thumb.jpg` at 400px | Defence in depth for non-browser clients; precise locations live only in entry fields |
 | Device map (`resources/js/ui/map.js`) lazy-imports Leaflet on first visit to `#/map` | Keeps Leaflet out of the journal views' startup; uses `circleMarker` so no marker image assets are needed |
 | Alpine.js over Vue | Views are small; revisit if they grow |
@@ -208,3 +208,11 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Persistence | `navigator.storage.persist()` requested automatically once there is an entry, and from a "Protect my entries" button; iOS gets Home Screen advice instead |
 | Warning | At 80% of quota: a toast once per session plus a banner linking to Sync |
 | Free space | `freeSyncedPhotos()` drops the full-size Blob of photos the server has, keeping thumbnails; `fetchFullPhoto()` downloads it again on demand |
+
+## Install and API versions
+
+| Item | Detail |
+|------|--------|
+| Install | `resources/js/ui/install.js`: Chromium `beforeinstallprompt` gets an Install button; iOS gets "Share, then Add to Home Screen"; card on the Entries view, dismissal remembered for 14 days |
+| API version | `ApiVersion` middleware adds `X-Crwydro-Api` (`crwydro.api_version`) to every API response; client sends `X-Crwydro-Client-Api` (`API_VERSION` in `sync/api.js`) |
+| Old clients | Below `MIN_CLIENT_API` the server answers 426 before touching data; the processor stops with `update-required`, keeps the outbox, and the update bar asks the walker to update |

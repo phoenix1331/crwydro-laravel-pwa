@@ -1,5 +1,6 @@
 import Alpine from 'alpinejs';
 import { pwaStore } from './pwa';
+import { installStore } from './ui/install';
 import { languageStore, registerTranslationMagic } from './ui/language';
 import { routerStore } from './router';
 import { authStore, loginForm } from './ui/auth';
@@ -21,6 +22,7 @@ Alpine.store('toast', toastStore());
 Alpine.store('auth', authStore());
 Alpine.store('sync', syncStore());
 Alpine.store('storage', storageStore());
+Alpine.store('install', installStore());
 
 Alpine.data('entryForm', entryForm);
 Alpine.data('entryList', entryList);

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\ApiVersion;
 use App\Http\Middleware\SetLocaleFromCookie;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Written by the PWA in plain text, so it must not be encrypted
         $middleware->encryptCookies(except: ['crwydro_locale']);
         $middleware->web(append: [SetLocaleFromCookie::class]);
+        $middleware->api(prepend: [ApiVersion::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

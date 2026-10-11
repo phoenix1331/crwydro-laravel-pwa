@@ -166,6 +166,7 @@ return [
         'interrupted' => 'Signal dropped mid-sync. Nothing was lost; it will pick up where it left off.',
         'auth' => 'Log in again to carry on syncing.',
         'error' => 'Sync hit an unexpected error.',
+        'update_required' => 'This version of Crwydro is out of date. Update it to carry on syncing; nothing on this device is lost.',
     ],
 
     'login' => [
@@ -206,6 +207,21 @@ return [
         'free' => 'Free :size',
         'free_hint' => 'Removes full-size copies of photos already on the server. Thumbnails stay; full photos download again when you open them.',
         'freed' => 'Freed :size.',
+    ],
+
+    'install' => [
+        'title' => 'Add Crwydro to your Home Screen',
+        'body' => 'It opens like an app, works with no signal, and keeps your entries safer.',
+        'button' => 'Install',
+        'ios' => 'Tap Share, then Add to Home Screen.',
+        'not_now' => 'Not now',
+    ],
+
+    'update' => [
+        'ready' => 'A new version of Crwydro is ready.',
+        'required' => 'This version of Crwydro is out of date. Update to carry on syncing.',
+        'button' => 'Update',
+        'later' => 'Later',
     ],
 
     'time' => [

@@ -1,6 +1,24 @@
 export class NetworkError extends Error {}
 
 /**
+ * The API contract this build understands. Bump alongside
+ * config('crwydro.api_version') when a cached client must update.
+ */
+export const API_VERSION = 1;
+
+/**
+ * Tell the page (or the worker's clients) the server speaks a newer API than
+ * this cached build, so it can offer an update.
+ */
+function reportServerVersion(response) {
+    const server = Number(response.headers?.get?.('X-Crwydro-Api'));
+
+    if (server > API_VERSION || response.status === 426) {
+        globalThis.dispatchEvent?.(new CustomEvent('crwydro:update-required', { detail: { server } }));
+    }
+}
+
+/**
  * Thin fetch wrapper for the sync API. Relative URLs work from both the page
  * and the service worker, since both share the origin.
  */
@@ -8,7 +26,7 @@ export function createApi({ token = null, fetch: fetchImpl = globalThis.fetch.bi
     async function request(method, path, { body = undefined, contentType = 'application/json', timeout = 15000 } = {}) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeout);
-        const headers = { Accept: 'application/json' };
+        const headers = { Accept: 'application/json', 'X-Crwydro-Client-Api': String(API_VERSION) };
 
         if (token) {
             headers.Authorization = `Bearer ${token}`;
@@ -33,6 +51,8 @@ export function createApi({ token = null, fetch: fetchImpl = globalThis.fetch.bi
         } finally {
             clearTimeout(timer);
         }
+
+        reportServerVersion(response);
 
         const text = await response.text().catch(() => '');
         let data = null;

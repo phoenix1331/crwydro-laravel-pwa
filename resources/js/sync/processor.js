@@ -11,6 +11,7 @@ export const RESULT_INTERRUPTED = 'interrupted';
 export const RESULT_AUTH_REQUIRED = 'auth-required';
 export const RESULT_UNAUTHENTICATED = 'unauthenticated';
 export const RESULT_BUSY = 'busy';
+export const RESULT_UPDATE_REQUIRED = 'update-required';
 
 const RETRYABLE = (status) => status === 409 || status === 408 || status === 429 || status >= 500;
 
@@ -214,6 +215,13 @@ export async function processOutbox({ fetch: fetchImpl, now = Date.now, random =
             await release(row);
 
             return { status: RESULT_AUTH_REQUIRED, ...stats };
+        }
+
+        // This cached build is older than the server accepts: keep everything queued until it updates
+        if (response.status === 426) {
+            await release(row);
+
+            return { status: RESULT_UPDATE_REQUIRED, ...stats };
         }
 
         if (holdsEntry) {

@@ -166,6 +166,7 @@ return [
         'interrupted' => 'Collwyd y signal wrth gysoni. Chollwyd dim byd; bydd yn ailddechrau o’r man lle stopiodd.',
         'auth' => 'Mewngofnodwch eto i barhau i gysoni.',
         'error' => 'Aeth rhywbeth o’i le wrth gysoni.',
+        'update_required' => 'Mae’r fersiwn hon o Crwydro wedi dyddio. Diweddarwch hi i barhau i gysoni; does dim byd ar y ddyfais hon yn cael ei golli.',
     ],
 
     'login' => [
@@ -206,6 +207,21 @@ return [
         'free' => 'Rhyddhau :size',
         'free_hint' => 'Yn tynnu copïau maint llawn o luniau sydd eisoes ar y gweinydd. Mae’r mân-luniau’n aros; mae lluniau llawn yn llwytho eto pan fyddwch yn eu hagor.',
         'freed' => 'Wedi rhyddhau :size.',
+    ],
+
+    'install' => [
+        'title' => 'Ychwanegu Crwydro at eich Sgrin Gartref',
+        'body' => 'Mae’n agor fel ap, yn gweithio heb signal, ac yn cadw’ch cofnodion yn fwy diogel.',
+        'button' => 'Gosod',
+        'ios' => 'Tapiwch Rhannu, yna Ychwanegu at y Sgrin Gartref.',
+        'not_now' => 'Nid nawr',
+    ],
+
+    'update' => [
+        'ready' => 'Mae fersiwn newydd o Crwydro yn barod.',
+        'required' => 'Mae’r fersiwn hon o Crwydro wedi dyddio. Diweddarwch i barhau i gysoni.',
+        'button' => 'Diweddaru',
+        'later' => 'Wedyn',
     ],
 
     'time' => [

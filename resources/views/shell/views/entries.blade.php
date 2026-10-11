@@ -1,6 +1,8 @@
 {{-- On phones the list and an entry are separate screens; from lg the list stays beside the open entry --}}
 <section x-data="entryList" x-show="$store.router.is('entries', 'entry')" x-cloak
          :class="$store.router.is('entry') && 'max-lg:hidden'" class="min-w-0">
+    @include('shell.install-card')
+
     <div class="flex items-end justify-between gap-4">
         <h1 class="text-3xl" x-text="$t('entries.title')">Entries</h1>
         <p class="hint hidden pb-1 md:block" x-show="entries.length" x-text="$t('status.count_on_device', { count: entries.length })"></p>

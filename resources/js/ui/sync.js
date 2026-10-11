@@ -10,6 +10,7 @@ import {
     RESULT_DONE,
     RESULT_INTERRUPTED,
     RESULT_OFFLINE,
+    RESULT_UPDATE_REQUIRED,
     retryFailed,
     runSync,
 } from '../sync/processor';
@@ -19,6 +20,7 @@ const MESSAGES = {
     [RESULT_OFFLINE]: 'sync.offline',
     [RESULT_INTERRUPTED]: 'sync.interrupted',
     [RESULT_AUTH_REQUIRED]: 'sync.auth',
+    [RESULT_UPDATE_REQUIRED]: 'sync.update_required',
 };
 
 /**
