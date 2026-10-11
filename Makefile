@@ -3,7 +3,7 @@
 DC = docker compose
 APP = $(DC) exec app
 
-.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets
+.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -58,3 +58,6 @@ npm: ## Run an npm command in the app container, e.g. make npm cmd="install"
 
 assets: ## Build front-end assets for production (stops the Vite dev server hot file)
 	@$(APP) sh -c "rm -f public/hot && npm run build"
+
+test-js: ## Run the Vitest suite
+	@$(APP) npm test

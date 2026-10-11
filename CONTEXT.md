@@ -25,7 +25,9 @@ All artisan, composer, npm and test commands run inside the container: `docker c
 | `docker-compose.yml`, `Dockerfile` | Containerised runtime |
 | `Makefile` | All developer commands |
 | `request.http` | Example API requests |
+| `resources/js/data/` | Dexie schema (`db.js`), entry repository (`entries.js`), outbox queue (`outbox.js`) |
 | `tests/` | Pest feature and unit tests (SQLite in-memory via `phpunit.xml`) |
+| `tests/js/` | Vitest suite over `fake-indexeddb` (`make test-js`) |
 
 ## Key decisions
 
@@ -84,3 +86,20 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Manifest | `build/manifest.webmanifest`; the inline `webManifestPrecachePath` plugin in `vite.config.js` fixes its precache path |
 | Icons | `public/icons/` (192, 512, maskable 512, Apple touch 180, favicon 48) |
 | Dev | Service worker disabled under the Vite dev server; test offline with `make assets` |
+
+## Local data model (Dexie)
+
+| Store | Indexes | Notes |
+|-------|---------|-------|
+| `entries` | `id, createdAt, updatedAt, tag, syncStatus, deletedAt` | camelCase fields; `syncStatus` is `local`, `syncing`, `synced` or `failed`; soft delete via `deletedAt` |
+| `photos` | `id, entryId, syncStatus` | Blob plus width and height |
+| `outbox` | `++seq, kind, refId, entryId, attempts` | `kind` is `entry.put`, `entry.delete` or `photo.put`; also `rev`, `failed`, `nextAttemptAt`, `lastError` |
+| `meta` | `key` | `getMeta` / `setMeta` key-value store |
+
+| Rule | Why |
+|------|-----|
+| Every entry write and its outbox row share one Dexie transaction | No entry can exist without a queued upload |
+| One pending `entry.put` per entry; edits bump its `rev` instead of adding rows | A put always sends the latest state; a send whose `rev` changed mid-flight keeps its row |
+| Editing an entry revives a `failed` put | The walker fixing data is the retry |
+| `updatedAt` always moves forward at least 1 ms (`nextTimestamp`) | Last-write-wins needs strictly ordered edits |
+| IDs from `ulid` `monotonicFactory` | Sortable and unique even when minted in the same millisecond |
