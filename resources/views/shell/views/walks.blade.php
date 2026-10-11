@@ -15,6 +15,7 @@
                         <p class="font-semibold" x-text="walk.cy"></p>
                         <p class="text-sm text-peat-600" x-text="walk.en"></p>
                         <p class="mt-1 text-sm" x-text="walk.note"></p>
+                        <a :href="`#/map/${walk.id}`" class="mt-2 inline-flex min-h-10 items-center text-sm font-semibold text-moss-600">Show on map &rarr;</a>
                     </li>
                 </template>
             </ul>

@@ -26,6 +26,14 @@
             New
         </a>
 
+        <a href="#/map" class="flex flex-col items-center gap-1 py-2 text-xs font-semibold"
+           :class="$store.router.is('map') ? 'text-moss-600' : 'text-peat-400'">
+            <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14" />
+            </svg>
+            Map
+        </a>
+
         <a href="#/sync" class="flex flex-col items-center gap-1 py-2 text-xs font-semibold"
            :class="$store.router.is('sync', 'login') ? 'text-moss-600' : 'text-peat-400'">
             <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

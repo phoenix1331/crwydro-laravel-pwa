@@ -4,6 +4,7 @@ import { routerStore } from './router';
 import { authStore, loginForm } from './ui/auth';
 import { entryDetail, entryEdit, entryList } from './ui/entries';
 import { entryForm } from './ui/entry-form';
+import { deviceMap } from './ui/map';
 import { networkStore } from './ui/network';
 import { syncStore } from './ui/sync';
 import { toastStore } from './ui/toast';
@@ -22,6 +23,7 @@ Alpine.data('entryDetail', entryDetail);
 Alpine.data('entryEdit', entryEdit);
 Alpine.data('loginForm', loginForm);
 Alpine.data('walkList', walkList);
+Alpine.data('deviceMap', deviceMap);
 
 window.Alpine = Alpine;
 

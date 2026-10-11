@@ -49,6 +49,7 @@ All artisan, composer, npm and test commands run inside the container: `docker c
 | `/` shell precached with a per-build revision (`__BUILD_ID__`) | Server-rendered shell refreshes with each deploy alongside hashed assets |
 | `registerType: 'prompt'` (`resources/js/pwa.js`) | Never swap code under a walker mid-trip; they choose when to update |
 | Server re-encodes every photo in `App\Jobs\ProcessEntryPhoto` (Intervention Image v4, GD): strips EXIF, caps at 1600px, writes `{id}_thumb.jpg` at 400px | Defence in depth for non-browser clients; precise locations live only in entry fields |
+| Device map (`resources/js/ui/map.js`) lazy-imports Leaflet on first visit to `#/map` | Keeps Leaflet out of the journal views' startup; uses `circleMarker` so no marker image assets are needed |
 | Alpine.js over Vue | Views are small; revisit if they grow |
 | Millisecond timestamps on `entries` (`$dateFormat = 'Y-m-d H:i:s.v'`, precision 3 columns) | Eloquent drops ms by default; last-write-wins and pull cursors need them |
 
@@ -91,6 +92,7 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Navigation | `NavigationRoute` serves precached `/` for `/` only; `/api/*` is never cached |
 | Manifest | `build/manifest.webmanifest`; the inline `webManifestPrecachePath` plugin in `vite.config.js` fixes its precache path |
 | Icons | `public/icons/` (192, 512, maskable 512, Apple touch 180, favicon 48) |
+| Map tiles | `tile.openstreetmap.org` runtime-cached `CacheFirst` in `osm-tiles` (3000 tiles, 30 days, purged on quota error). Only tiles the walker views are cached; never bulk-prefetch (OSM tile policy) |
 | Dev | Service worker disabled under the Vite dev server; test offline with `make assets` |
 
 ## Local data model (Dexie)

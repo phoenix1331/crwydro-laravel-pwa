@@ -29,6 +29,7 @@
             @include('shell.views.entry')
             @include('shell.views.edit')
             @include('shell.views.walks')
+            @include('shell.views.map')
             @include('shell.views.sync')
             @include('shell.views.login')
         </main>

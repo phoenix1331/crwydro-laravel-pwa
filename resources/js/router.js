@@ -9,6 +9,7 @@ const routes = [
     { name: 'entry', pattern: /^\/entries\/([0-9A-HJKMNP-TV-Z]{26})\/?$/ },
     { name: 'edit', pattern: /^\/entries\/([0-9A-HJKMNP-TV-Z]{26})\/edit\/?$/ },
     { name: 'walks', pattern: /^\/walks\/?$/ },
+    { name: 'map', pattern: /^\/map(?:\/([a-z-]+))?\/?$/ },
     { name: 'sync', pattern: /^\/sync\/?$/ },
     { name: 'login', pattern: /^\/login\/?$/ },
 ];
