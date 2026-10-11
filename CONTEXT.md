@@ -157,3 +157,12 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | `GET /photos/{photo}/{variant?}` | Streams `full` or `thumb` from the private photos disk to the owner only (404 otherwise); thumb falls back to full until the queued job has run |
 | `GET /export/entries.{gpx,csv}` (web) and `/api/export/entries.{gpx,csv}` (token) | `ExportController` via `App\Exports\EntryExporter`: GPX 1.1 waypoints for located entries; CSV of all entries with photo count; free text prefixed with `'` if it starts with `= + - @` (CSV injection guard) |
 | Times | Stored UTC; server views render in `crwydro.display_timezone` (`Europe/London`) |
+
+## Pull sync (`resources/js/sync/pull.js`)
+
+| Rule | Detail |
+|------|--------|
+| Order | `runSync()` pushes first, then pulls only if the push finished (`done`), then downloads thumbnails, all inside the `crwydro-sync` lock |
+| Cursor | `meta.pullCursor`; each page and its cursor are written in one Dexie transaction, so an interrupted pull resumes from the last complete page; a 422 resets the cursor and pulls from the start |
+| Merge | Entries with any outbox rows are skipped (the device's copy wins and its push settles it on the server); otherwise the server copy is taken only if its `client_updated_at` is newer; server deletes remove the entry and its photos |
+| Photos | Pulled as metadata (`remote: true`, no Blobs); `downloadThumbnails()` fetches up to 20 thumbnails per sync; the full image downloads the first time it is opened (`fetchFullPhoto`) |

@@ -3,6 +3,7 @@ import { SYNC_FAILED, SYNC_LOCAL, SYNC_SYNCED, SYNC_SYNCING } from '../data/entr
 import { ENTRY_DELETE, ENTRY_PUT, PHOTO_PUT } from '../data/outbox';
 import { createApi, errorMessage, NetworkError } from './api';
 import { backoffDelay } from './backoff';
+import { downloadThumbnails, pullChanges } from './pull';
 
 export const RESULT_DONE = 'done';
 export const RESULT_OFFLINE = 'offline';
@@ -240,12 +241,32 @@ export async function processOutbox({ fetch: fetchImpl, now = Date.now, random =
  */
 let running = null;
 
+/**
+ * Push first, then pull: local changes reach the server before the device
+ * asks what changed, so a pull never has to reconcile its own unsent edits.
+ */
+async function pushThenPull(options) {
+    const result = await processOutbox(options);
+
+    if (result.status !== RESULT_DONE) {
+        return result;
+    }
+
+    const pull = await pullChanges(options);
+
+    if (pull.status === 'done') {
+        await downloadThumbnails(options);
+    }
+
+    return { ...result, pull };
+}
+
 export function runSync(options = {}) {
     const locks = globalThis.navigator?.locks;
 
     if (locks) {
         return locks.request('crwydro-sync', { ifAvailable: true }, (lock) =>
-            lock ? processOutbox(options) : { status: RESULT_BUSY },
+            lock ? pushThenPull(options) : { status: RESULT_BUSY },
         );
     }
 
@@ -253,7 +274,7 @@ export function runSync(options = {}) {
         return Promise.resolve({ status: RESULT_BUSY });
     }
 
-    running = processOutbox(options).finally(() => (running = null));
+    running = pushThenPull(options).finally(() => (running = null));
 
     return running;
 }

@@ -1,6 +1,7 @@
 import { liveQuery } from 'dexie';
 import { deleteEntry, getEntry, listEntries, updateEntry } from '../data/entries';
 import { addPhotos, coverPhotos, photosFor, removeUnsyncedPhoto } from '../data/photos';
+import { fetchFullPhoto } from '../sync/pull';
 import { TAGS, tagLabel } from '../data/tags';
 import { formatCoords, formatDateTime, formatRelative, SYNC_BADGES } from './format';
 import { photoUrl } from './object-urls';
@@ -86,6 +87,22 @@ export function entryDetail() {
                     this.photos = photos;
                 },
             );
+        },
+
+        /**
+         * Photos pulled from the server arrive as thumbnails; the full image
+         * downloads the first time it is opened, if there is signal.
+         */
+        async open(photo) {
+            this.enlarged = photo;
+
+            if (!photo.blob) {
+                const blob = await fetchFullPhoto(photo.id);
+
+                if (blob && this.enlarged?.id === photo.id) {
+                    this.enlarged = { ...photo, blob };
+                }
+            }
         },
 
         async remove() {

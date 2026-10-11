@@ -86,6 +86,7 @@ export function syncStore() {
             if (result.status === RESULT_DONE) {
                 const parts = [`${result.sent} sent`];
 
+                if (result.pull?.applied || result.pull?.deleted) parts.push(`${result.pull.applied + result.pull.deleted} updated from the server`);
                 if (result.failed) parts.push(`${result.failed} failed`);
                 if (result.deferred) parts.push(`${result.deferred} waiting to retry`);
 
