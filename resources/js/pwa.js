@@ -13,7 +13,6 @@ export function pwaStore() {
         needRefresh: false,
         updateRequired: false,
         buildId: __BUILD_ID__,
-        updateSW: null,
         registration: null,
 
         init() {
@@ -27,7 +26,7 @@ export function pwaStore() {
                 return;
             }
 
-            this.updateSW = registerSW({
+            registerSW({
                 immediate: true,
                 onOfflineReady: () => (this.offlineReady = true),
                 onNeedRefresh: () => (this.needRefresh = true),
@@ -51,8 +50,26 @@ export function pwaStore() {
             }
         },
 
-        update() {
-            this.updateSW?.(true);
+        /**
+         * Activate the waiting version and reload once it controls the page.
+         * Does not rely on the plugin's reload, which only fires for an update
+         * this tab started: with several tabs open, another tab may already
+         * have activated it, leaving nothing waiting here. In that case, or if
+         * activation stalls, a plain reload picks up the new version.
+         */
+        async update() {
+            const registration = this.registration ?? (await navigator.serviceWorker?.getRegistration());
+            const waiting = registration?.waiting;
+
+            if (!waiting) {
+                window.location.reload();
+
+                return;
+            }
+
+            navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload(), { once: true });
+            waiting.postMessage({ type: 'SKIP_WAITING' });
+            setTimeout(() => window.location.reload(), 3000);
         },
 
         later() {
