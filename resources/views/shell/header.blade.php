@@ -1,5 +1,5 @@
 {{-- Phone header; from md up the sidebar carries the brand and sync status --}}
-<header class="contour-panel sticky top-0 z-20 md:hidden" style="padding-top: env(safe-area-inset-top)">
+<header class="brand-panel sticky top-0 z-20 md:hidden" style="padding-top: env(safe-area-inset-top)">
     <div class="flex h-14 items-center justify-between px-4">
         @include('shell.brand')
 

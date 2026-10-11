@@ -146,7 +146,7 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Licence | ODbL; attribution shown on the Walks view and stored in each GeoJSON |
 | Substitution | No OSM relation exists for "Tryfan and the Glyderau", so `cwm-idwal` (OSM 19400332, beneath Tryfan and the Glyderau) stands in |
 | Entries | Optional `routeId` / `route_id`; the new entry form remembers the last walk in `meta.lastRouteId` |
-| Look out for | Bilingual quick picks per area in `walks.js`; picking one fills the title (Welsh first) and tag |
+| Look out for | Bilingual quick picks per area in `walks.js` (six common ones when no walk is chosen); chips wrap rather than scroll; picking one fills the title (Welsh first) and tag |
 
 ## Server-rendered views
 
@@ -171,7 +171,7 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 
 | Item | Detail |
 |------|--------|
-| Direction | OS Explorer map vernacular: heather, peat, tarn, bracken; one decorative element, the contour texture (`contour-panel`, `resources/images/contours.svg`, `make contours`) on the brand panel only |
+| Direction | OS Explorer map vernacular: heather, peat, tarn, bracken. Navigation (phone header, sidebars) uses the plain `brand-panel` for legibility; the contour texture (`contour-panel`, `resources/images/contours.svg`, `make contours`) appears only on the web login panel |
 | Colour | Semantic tokens as CSS variables with a dark set under `prefers-color-scheme`: `canvas`, `surface`, `sunk`, `line`, `line-strong`, `ink`, `muted`, `faint`, `accent` (heather), `ok` (moss), `warn` (bracken), `danger`, `link` (tarn), `panel*`. Use these, never literal palette classes |
 | Status meaning | `warn` = only on this device, `ok` = safe on the server, `danger` = needs the walker |
 | Type | Atkinson Hyperlegible Next; headings 800 with -0.02em tracking; tabular figures everywhere; 17px base on phones, 16px from 1024px |

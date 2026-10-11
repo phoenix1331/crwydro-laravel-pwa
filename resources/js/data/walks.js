@@ -114,10 +114,19 @@ export function walkLabel(id) {
     return walk ? `${walk.cy} (${walk.en})` : null;
 }
 
+// With no walk chosen, a short list of what walkers see most across Wales
+const COMMON = ['Barcud coch', 'Pabi Cymreig', 'Bwncath', 'Grug', 'Brân goesgoch', "Lili'r Wyddfa"];
+
 export function lookOutFor(routeId) {
     const walk = walkById(routeId);
 
-    return walk ? LOOK_OUT[walk.area] : Object.values(LOOK_OUT).flat().filter((item, index, all) => all.findIndex((other) => other.cy === item.cy) === index);
+    if (walk) {
+        return LOOK_OUT[walk.area];
+    }
+
+    const all = Object.values(LOOK_OUT).flat();
+
+    return COMMON.map((name) => all.find((item) => item.cy === name)).filter(Boolean);
 }
 
 export function walkNote(walk) {

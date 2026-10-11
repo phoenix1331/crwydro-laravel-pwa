@@ -1,5 +1,5 @@
-{{-- Tablet and laptop navigation: the contour panel runs the full height --}}
-<aside x-data class="contour-panel sticky top-0 hidden h-dvh flex-col gap-8 px-5 py-6 md:flex" :aria-label="$t('nav.label')" aria-label="Main">
+{{-- Tablet and laptop navigation: a dark panel the full height of the screen --}}
+<aside x-data class="brand-panel sticky top-0 hidden h-dvh flex-col gap-8 px-5 py-6 md:flex" :aria-label="$t('nav.label')" aria-label="Main">
     @include('shell.brand')
 
     <a href="#/entries/new" class="btn-primary w-full">

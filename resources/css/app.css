@@ -146,7 +146,13 @@
     }
 }
 
-/* The one decorative element: OS-style contours on the brand panel */
+/* Navigation chrome: a plain dark panel, so its text stays easy to read */
+@utility brand-panel {
+    background-color: var(--panel);
+    color: var(--panel-ink);
+}
+
+/* OS-style contours, kept for the large brand panel on the web login page only */
 @utility contour-panel {
     background-color: var(--panel);
     background-image: url('../images/contours.svg');

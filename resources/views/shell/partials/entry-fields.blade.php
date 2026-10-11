@@ -10,7 +10,7 @@
 
 <div>
     <p class="label" x-text="$t('form.look_out')">Look out for</p>
-    <div class="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 lg:mx-0 lg:flex-wrap lg:px-0">
+    <div class="flex flex-wrap gap-2">
         <template x-for="item in quickPicks()" :key="item.cy">
             <button type="button" @click="pickSpecies(item)"
                     class="chip px-3.5">

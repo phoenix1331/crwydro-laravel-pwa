@@ -6,7 +6,7 @@
         <p class="hint hidden pb-1 md:block" x-show="entries.length" x-text="$t('status.count_on_device', { count: entries.length })"></p>
     </div>
 
-    <div class="no-scrollbar -mx-4 mt-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0" role="group" :aria-label="$t('entries.filter')" aria-label="Filter by tag">
+    <div class="mt-4 mb-4 flex flex-wrap gap-2" role="group" :aria-label="$t('entries.filter')" aria-label="Filter by tag">
         <button type="button" class="chip" :class="filter === null && 'chip-on'" :aria-pressed="filter === null" @click="filter = null" x-text="$t('entries.all')">All</button>
         <template x-for="option in tags" :key="option.key">
             <button type="button" class="chip" :class="filter === option.key && 'chip-on'" :aria-pressed="filter === option.key"

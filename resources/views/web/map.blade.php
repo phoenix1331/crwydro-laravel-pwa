@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="min-h-dvh md:grid md:grid-cols-[15.5rem_minmax(0,1fr)]">
-        <aside class="contour-panel flex items-center justify-between gap-4 px-4 py-3 md:sticky md:top-0 md:h-dvh md:flex-col md:items-stretch md:justify-start md:gap-8 md:px-5 md:py-6">
+        <aside class="brand-panel flex items-center justify-between gap-4 px-4 py-3 md:sticky md:top-0 md:h-dvh md:flex-col md:items-stretch md:justify-start md:gap-8 md:px-5 md:py-6">
             <a href="{{ route('app') }}" class="flex items-center gap-2.5 text-xl font-extrabold tracking-[-0.02em]">
                 @include('shell.icon', ['name' => 'peak', 'class' => 'size-7'])
                 {{ config('app.name') }}

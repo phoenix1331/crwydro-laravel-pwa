@@ -42,3 +42,12 @@ describe('walks', () => {
         await expect(createEntry({ title: 'Somewhere', tag: 'view', routeId: 'pennine-way' })).rejects.toThrow('Unknown walk');
     });
 });
+
+describe('look out for', () => {
+    it('offers a short common list without a walk, and the area list with one', async () => {
+        const { lookOutFor } = await import('../../resources/js/data/walks');
+
+        expect(lookOutFor(null)).toHaveLength(6);
+        expect(lookOutFor('arfordir-penfro').map((item) => item.cy)).toContain('Pâl');
+    });
+});
