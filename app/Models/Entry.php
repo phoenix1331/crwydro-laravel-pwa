@@ -57,6 +57,7 @@ class Entry extends Model
     protected function casts(): array
     {
         return [
+            'user_id' => 'integer',
             'tag' => Tag::class,
             'lat' => 'float',
             'lng' => 'float',

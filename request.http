@@ -21,3 +21,51 @@ Content-Type: application/json
 GET {{baseUrl}}/api/user
 Accept: application/json
 Authorization: Bearer {{token}}
+
+### Sync
+
+# Reachability check the client runs before draining its outbox (no auth)
+GET {{baseUrl}}/api/ping
+Accept: application/json
+
+###
+
+# Create or update an entry keyed by a client-minted ULID; send twice and only one row exists
+PUT {{baseUrl}}/api/entries/01K7A3Q9X2M4N6P8R0S2T4V6W8
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "Pabi Cymreig on the Minffordd Path",
+    "notes": "Welsh poppies by the stream below Llyn Cau",
+    "tag": "flower",
+    "lat": 52.6893,
+    "lng": -3.8936,
+    "accuracy_m": 8.5,
+    "altitude_m": 412.0,
+    "recorded_at": "2026-10-11T10:15:30.123Z",
+    "client_updated_at": "2026-10-11T10:15:30.123Z"
+}
+
+###
+
+# Send an older client_updated_at and the server keeps the newer copy (last-write-wins)
+PUT {{baseUrl}}/api/entries/01K7A3Q9X2M4N6P8R0S2T4V6W8
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "Stale edit, ignored",
+    "tag": "flower",
+    "recorded_at": "2026-10-11T10:15:30.123Z",
+    "client_updated_at": "2026-10-11T09:00:00.000Z"
+}
+
+###
+
+# Soft delete; repeating it still returns 204
+DELETE {{baseUrl}}/api/entries/01K7A3Q9X2M4N6P8R0S2T4V6W8
+Accept: application/json
+Authorization: Bearer {{token}}

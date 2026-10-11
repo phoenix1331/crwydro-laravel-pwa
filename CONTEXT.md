@@ -54,3 +54,13 @@ All artisan, composer and test commands run inside the container: `docker compos
 |-------|-------------|
 | `entries` | ULID `id` (client-minted), `user_id`, `title`, `notes`, `tag` (`App\Enums\Tag`), `lat`, `lng`, `accuracy_m`, `altitude_m`, `recorded_at`, `client_updated_at`, soft deletes; index `user_id, updated_at` |
 | `entry_photos` | ULID `id` (client-minted), `entry_id`, `path`, `thumb_path`, `width`, `height`, `bytes` |
+
+## Sync contract
+
+| Endpoint | Behaviour |
+|----------|-----------|
+| `GET /api/ping` | No auth, `Cache-Control: no-store`; client checks it before draining the outbox |
+| `PUT /api/entries/{ulid}` | Upsert via `App\Actions\UpsertEntry`: 201 new, 200 otherwise. Ignores writes with `client_updated_at` <= stored. Never resurrects a soft-deleted entry. 403 if another user owns the ULID. A concurrent duplicate insert falls back to an update |
+| `DELETE /api/entries/{ulid}` | Soft delete, 204 even if unknown or already deleted |
+
+Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.123Z`), via `App\Http\Resources\EntryResource`.
