@@ -3,7 +3,7 @@
 DC = docker compose
 APP = $(DC) exec app
 
-.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker
+.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -43,3 +43,9 @@ composer: ## Run a composer command, e.g. make composer cmd="require foo/bar"
 
 tinker: ## Open a tinker session
 	@$(APP) php artisan tinker
+
+lint: ## Fix code style with Pint
+	@$(APP) ./vendor/bin/pint
+
+lint-test: ## Check code style without fixing
+	@$(APP) ./vendor/bin/pint --test
