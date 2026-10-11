@@ -3,7 +3,7 @@
 DC = docker compose
 APP = $(DC) exec app
 
-.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js queue-restart routes contours
+.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js queue-restart routes contours e2e
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -70,3 +70,8 @@ routes: ## Re-import featured walk GeoJSON from OpenStreetMap (via Waymarked Tra
 
 contours: ## Regenerate the contour texture used on the brand panel
 	@python3 -I scripts/contours.py resources/images/contours.svg
+
+e2e: ## Run Playwright end-to-end tests against a production build (needs the stack up)
+	@$(APP) sh -c "rm -f public/hot && npm run build" > /dev/null
+	@$(APP) php artisan cache:clear > /dev/null
+	@$(DC) run --rm e2e

@@ -30,6 +30,7 @@ All artisan, composer, npm and test commands run inside the container: `docker c
 | `resources/js/data/` | Dexie schema (`db.js`), entry repository (`entries.js`), outbox queue (`outbox.js`) |
 | `tests/` | Pest feature and unit tests (SQLite in-memory via `phpunit.xml`) |
 | `tests/js/` | Vitest suite over `fake-indexeddb` (`make test-js`) |
+| `tests/e2e/` | Playwright end-to-end tests (`make e2e`) in the `e2e` compose service (Playwright image, `profiles: [e2e]`, `network_mode: service:app` so the app is on localhost for the service worker) |
 
 ## Key decisions
 
@@ -216,3 +217,11 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Install | `resources/js/ui/install.js`: Chromium `beforeinstallprompt` gets an Install button; iOS gets "Share, then Add to Home Screen"; card on the Entries view, dismissal remembered for 14 days |
 | API version | `ApiVersion` middleware adds `X-Crwydro-Api` (`crwydro.api_version`) to every API response; client sends `X-Crwydro-Client-Api` (`API_VERSION` in `sync/api.js`) |
 | Old clients | Below `MIN_CLIENT_API` the server answers 426 before touching data; the processor stops with `update-required`, keeps the outbox, and the update bar asks the walker to update |
+
+## End-to-end tests (`make e2e`)
+
+| Test | What it proves |
+|------|----------------|
+| `offline.spec.js` | An entry created offline shows "On this device", stays off the server, then reaches the API once online; the shell, entries and cached routes load with no network |
+| `resume.spec.js` | Three offline entries; the second upload is aborted mid-sync; some stay queued, the server holds the rest exactly once; after backoff all three arrive with no duplicates |
+| Notes | `make e2e` builds assets and clears the cache (login rate limiter) first; tests tag titles with a per-run id instead of resetting the database; Playwright's `@playwright/test` version must match the image tag in `docker-compose.yml` |

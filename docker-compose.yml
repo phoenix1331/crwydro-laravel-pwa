@@ -36,6 +36,23 @@ services:
     healthcheck:
       disable: true
 
+  # End-to-end tests: Playwright's image with browsers, sharing the app's network
+  # so the app is on localhost (service workers need a secure origin or localhost)
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.64.0-noble
+    profiles: ["e2e"]
+    network_mode: "service:app"
+    user: "${UID:-1000}:${GID:-1000}"
+    working_dir: /app
+    environment:
+      HOME: /tmp
+    volumes:
+      - .:/app
+    depends_on:
+      app:
+        condition: service_healthy
+    command: npx playwright test
+
   mysql:
     image: mysql:8.4
     ports:
