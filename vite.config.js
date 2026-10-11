@@ -77,7 +77,7 @@ export default defineConfig({
             },
             injectManifest: {
                 globDirectory: 'public',
-                globPatterns: ['build/assets/*.{js,css,woff2,woff}', 'icons/*.png'],
+                globPatterns: ['build/assets/*.{js,css,woff2,woff}', 'icons/*.png', 'routes/*.geojson'],
                 additionalManifestEntries: [{ url: '/', revision: buildId }],
             },
             devOptions: {

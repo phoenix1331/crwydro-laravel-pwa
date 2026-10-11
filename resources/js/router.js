@@ -8,6 +8,7 @@ const routes = [
     { name: 'new', pattern: /^\/entries\/new\/?$/ },
     { name: 'entry', pattern: /^\/entries\/([0-9A-HJKMNP-TV-Z]{26})\/?$/ },
     { name: 'edit', pattern: /^\/entries\/([0-9A-HJKMNP-TV-Z]{26})\/edit\/?$/ },
+    { name: 'walks', pattern: /^\/walks\/?$/ },
     { name: 'sync', pattern: /^\/sync\/?$/ },
     { name: 'login', pattern: /^\/login\/?$/ },
 ];

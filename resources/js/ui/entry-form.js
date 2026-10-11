@@ -1,6 +1,8 @@
+import { getMeta, setMeta } from '../data/db';
 import { createEntry } from '../data/entries';
 import { TAGS } from '../data/tags';
 import { nowIso } from '../data/time';
+import { walkFields } from './walk-fields';
 import { getPosition } from './geo';
 import { photoPicker } from './photo-picker';
 
@@ -14,6 +16,7 @@ const LOCATION_MESSAGES = {
 export function entryForm() {
     return {
         ...photoPicker(),
+        ...walkFields(),
         tags: TAGS,
         title: '',
         notes: '',
@@ -22,11 +25,16 @@ export function entryForm() {
         error: null,
         skipLocation: null,
 
+        async init() {
+            this.routeId = await getMeta('lastRouteId');
+        },
+
         reset() {
             this.title = '';
             this.notes = '';
             this.tag = 'flower';
             this.state = 'idle';
+            this.hint = null;
             this.takePending();
             this.error = null;
         },
@@ -54,6 +62,7 @@ export function entryForm() {
                     title: this.title,
                     notes: this.notes,
                     tag: this.tag,
+                    routeId: this.routeId || null,
                     location,
                     recordedAt,
                     photos: this.pending.map(({ blob, thumb, width, height }) => ({ blob, thumb, width, height })),
@@ -65,6 +74,7 @@ export function entryForm() {
                 return;
             }
 
+            await setMeta('lastRouteId', this.routeId || null);
             window.dispatchEvent(new CustomEvent('crwydro:sync-requested'));
             this.$store.toast.show(location ? 'Saved on this device.' : LOCATION_MESSAGES[reason], location ? 'success' : 'warning');
             this.reset();

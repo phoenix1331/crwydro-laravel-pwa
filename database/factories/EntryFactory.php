@@ -32,6 +32,7 @@ class EntryFactory extends Factory
             'lng' => $this->faker->longitude(-5.3, -2.7),
             'accuracy_m' => $this->faker->randomFloat(2, 3, 50),
             'altitude_m' => $this->faker->optional()->randomFloat(2, 0, 1085),
+            'route_id' => null,
             'recorded_at' => $recordedAt,
             'client_updated_at' => $recordedAt,
         ];

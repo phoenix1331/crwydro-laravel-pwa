@@ -29,6 +29,7 @@ class EntryResource extends JsonResource
             'lng' => $this->lng,
             'accuracy_m' => $this->accuracy_m,
             'altitude_m' => $this->altitude_m,
+            'route_id' => $this->route_id,
             'recorded_at' => $this->iso($this->recorded_at),
             'client_updated_at' => $this->iso($this->client_updated_at),
             'updated_at' => $this->iso($this->updated_at),

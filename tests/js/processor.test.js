@@ -68,7 +68,7 @@ describe('processOutbox', () => {
         expect(result).toMatchObject({ status: 'done', sent: 1 });
         const put = server.calls.find((call) => call.key === `PUT /api/entries/${entry.id}`);
         expect(put.init.headers.Authorization).toBe('Bearer test-token');
-        expect(JSON.parse(put.init.body)).toMatchObject({ title: 'Pabi Cymreig', tag: 'flower', lat: 52.68, accuracy_m: 8 });
+        expect(JSON.parse(put.init.body)).toMatchObject({ title: 'Pabi Cymreig', tag: 'flower', lat: 52.68, accuracy_m: 8, route_id: null });
         expect(await db.outbox.count()).toBe(0);
         expect((await db.entries.get(entry.id)).syncStatus).toBe('synced');
         expect(await getMeta('lastSyncAt')).toBe('2026-10-11T12:00:00.000Z');

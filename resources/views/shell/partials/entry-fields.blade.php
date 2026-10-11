@@ -1,4 +1,28 @@
 <div>
+    <label for="{{ $prefix }}-route" class="label">Walk <span class="font-normal text-peat-400">(optional)</span></label>
+    <select id="{{ $prefix }}-route" class="field" x-model="routeId">
+        <option value="">Not on a featured walk</option>
+        <template x-for="walk in walks" :key="walk.id">
+            <option :value="walk.id" x-text="walkLabel(walk.id)" :selected="walk.id === routeId"></option>
+        </template>
+    </select>
+</div>
+
+<div>
+    <p class="label">Look out for</p>
+    <div class="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+        <template x-for="item in quickPicks()" :key="item.cy">
+            <button type="button" @click="pickSpecies(item)"
+                    class="min-h-10 shrink-0 rounded-full border border-peat-200 bg-white px-3 text-sm text-peat-800 active:bg-peat-100">
+                <span class="font-semibold" x-text="item.cy"></span>
+                <span class="text-peat-600" x-text="`(${item.en})`"></span>
+            </button>
+        </template>
+    </div>
+    <p x-show="hint" x-text="hint" class="mt-2 rounded-xl bg-bracken-400/20 px-3 py-2 text-sm font-semibold text-bracken-600"></p>
+</div>
+
+<div>
     <label for="{{ $prefix }}-title" class="label">Title</label>
     <input id="{{ $prefix }}-title" type="text" class="field" x-model="title" maxlength="255"
            placeholder="Welsh poppy by the stream" autocomplete="off" enterkeyhint="next">

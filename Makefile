@@ -3,7 +3,7 @@
 DC = docker compose
 APP = $(DC) exec app
 
-.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js queue-restart
+.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js queue-restart routes
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -64,3 +64,6 @@ test-js: ## Run the Vitest suite
 
 queue-restart: ## Restart the queue worker so it picks up code changes
 	@$(DC) restart queue
+
+routes: ## Re-import featured walk GeoJSON from OpenStreetMap (via Waymarked Trails)
+	@python3 -I scripts/import_routes.py public/routes

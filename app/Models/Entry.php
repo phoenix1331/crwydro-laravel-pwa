@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'lng',
     'accuracy_m',
     'altitude_m',
+    'route_id',
     'recorded_at',
     'client_updated_at',
 ])]

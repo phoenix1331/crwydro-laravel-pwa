@@ -13,6 +13,11 @@
                 <time :datetime="entry.recordedAt" x-text="formatDateTime(entry.recordedAt)"></time>
             </p>
 
+            <p x-show="entry.routeId" class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-moss-500/15 px-3 py-1 text-sm font-semibold text-moss-700">
+                <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 19c4-1 3-6 7-7s4-6 9-7" /></svg>
+                <span x-text="walkLabel(entry.routeId)"></span>
+            </p>
+
             <p x-show="entry.syncError" x-text="entry.syncError"
                class="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-800"></p>
 

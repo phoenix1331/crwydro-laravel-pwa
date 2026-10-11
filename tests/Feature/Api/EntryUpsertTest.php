@@ -106,6 +106,18 @@ it('forbids touching another user\'s entry', function (): void {
         ->and($other->fresh()->trashed())->toBeFalse();
 });
 
+it('attaches an entry to a featured walk', function (): void {
+    $this->putJson("/api/entries/{$this->id}", entryPayload(['route_id' => 'cadair-idris-minffordd']))
+        ->assertCreated()
+        ->assertJsonPath('data.route_id', 'cadair-idris-minffordd');
+});
+
+it('rejects an unknown walk', function (): void {
+    $this->putJson("/api/entries/{$this->id}", entryPayload(['route_id' => 'the-pennine-way']))
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('route_id');
+});
+
 it('validates the payload', function (): void {
     $this->putJson("/api/entries/{$this->id}", ['tag' => 'dragon', 'lat' => 52.1])
         ->assertUnprocessable()

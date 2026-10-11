@@ -22,6 +22,7 @@ function toServer(entry) {
         lng: entry.lng,
         accuracy_m: entry.accuracy,
         altitude_m: entry.altitude,
+        route_id: entry.routeId ?? null,
         recorded_at: entry.recordedAt,
         client_updated_at: entry.updatedAt,
     };

@@ -3,6 +3,7 @@ import { ulid } from './ids';
 import { queueEntryDelete, queueEntryPut } from './outbox';
 import { attachPhotos } from './photos';
 import { TAG_KEYS } from './tags';
+import { ROUTE_IDS } from './walks';
 import { nextTimestamp, nowIso } from './time';
 
 export const SYNC_LOCAL = 'local';
@@ -10,9 +11,13 @@ export const SYNC_SYNCING = 'syncing';
 export const SYNC_SYNCED = 'synced';
 export const SYNC_FAILED = 'failed';
 
-const EDITABLE = ['title', 'notes', 'tag'];
+const EDITABLE = ['title', 'notes', 'tag', 'routeId'];
 
-function validate({ title, tag }) {
+function validate({ title, tag, routeId = null }) {
+    if (routeId !== null && !ROUTE_IDS.includes(routeId)) {
+        throw new Error(`Unknown walk: ${routeId}`);
+    }
+
     if (!title || !String(title).trim()) {
         throw new Error('A title is required.');
     }
@@ -28,8 +33,8 @@ function validate({ title, tag }) {
  * The entry's put is queued first, so the server always has the entry
  * before its photos arrive.
  */
-export async function createEntry({ title, notes = '', tag, location = null, recordedAt = null, photos = [] }) {
-    validate({ title, tag });
+export async function createEntry({ title, notes = '', tag, routeId = null, location = null, recordedAt = null, photos = [] }) {
+    validate({ title, tag, routeId });
 
     const now = nowIso();
     const entry = {
@@ -37,6 +42,7 @@ export async function createEntry({ title, notes = '', tag, location = null, rec
         title: String(title).trim(),
         notes: String(notes ?? '').trim(),
         tag,
+        routeId,
         lat: location?.lat ?? null,
         lng: location?.lng ?? null,
         accuracy: location?.accuracy ?? null,

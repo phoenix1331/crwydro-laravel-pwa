@@ -17,6 +17,21 @@ db.version(1).stores({
     meta: 'key',
 });
 
+// Entries can be attached to a featured walk. Upgrading runs on the device
+// the first time the new app version opens, so it must never lose data.
+db.version(2)
+    .stores({
+        entries: 'id, createdAt, updatedAt, tag, syncStatus, deletedAt, routeId',
+    })
+    .upgrade((tx) =>
+        tx
+            .table('entries')
+            .toCollection()
+            .modify((entry) => {
+                entry.routeId ??= null;
+            }),
+    );
+
 export async function getMeta(key, fallback = null) {
     const row = await db.meta.get(key);
 

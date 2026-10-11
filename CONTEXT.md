@@ -97,13 +97,14 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 
 | Store | Indexes | Notes |
 |-------|---------|-------|
-| `entries` | `id, createdAt, updatedAt, tag, syncStatus, deletedAt` | camelCase fields; `syncStatus` is `local`, `syncing`, `synced` or `failed`; soft delete via `deletedAt` |
+| `entries` | `id, createdAt, updatedAt, tag, syncStatus, deletedAt, routeId` (v2) | camelCase fields; `syncStatus` is `local`, `syncing`, `synced` or `failed`; soft delete via `deletedAt` |
 | `photos` | `id, entryId, syncStatus` | `blob` (max 1600px JPEG), `thumb` (320px JPEG), `width`, `height`, `bytes` |
 | `outbox` | `++seq, kind, refId, entryId, attempts` | `kind` is `entry.put`, `entry.delete` or `photo.put`; also `rev`, `failed`, `nextAttemptAt`, `lastError` |
 | `meta` | `key` | `getMeta` / `setMeta` key-value store |
 
 | Rule | Why |
 |------|-----|
+| Schema changes add a new `db.version(n)` with an `upgrade()`; never edit an old version | Devices upgrade in place when a new build opens; `tests/js/migrations.test.js` opens a v1 database with data and upgrades it |
 | Every entry write and its outbox row share one Dexie transaction | No entry can exist without a queued upload |
 | One pending `entry.put` per entry; edits bump its `rev` instead of adding rows | A put always sends the latest state; a send whose `rev` changed mid-flight keeps its row |
 | Editing an entry revives a `failed` put | The walker fixing data is the retry |
@@ -128,3 +129,14 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Triggers (`resources/js/ui/sync.js`) | App open, `online`, `visibilitychange` to visible, Sync now, `crwydro:sync-requested` (fired after every local write and after login), a timer for the earliest backed-off row |
 | Background Sync | Each trigger also registers the `crwydro-outbox` tag; `sw.js` runs `runSync()` on `sync` and rejects on `offline` or `interrupted` so Chromium retries. Safari and Firefox rely on the page triggers |
 | Stale badges | A run resets any `syncing` badge left by a cut-off run before it starts |
+
+## Featured walks
+
+| Item | Detail |
+|------|--------|
+| Data | `public/routes/{id}.geojson`, precached; ids in `config/crwydro.php` `routes` and `resources/js/data/walks.js` |
+| Source | OpenStreetMap hiking relations fetched via the Waymarked Trails API (Overpass was overloaded), simplified with Douglas-Peucker; `make routes` re-runs `scripts/import_routes.py` |
+| Licence | ODbL; attribution shown on the Walks view and stored in each GeoJSON |
+| Substitution | No OSM relation exists for "Tryfan and the Glyderau", so `cwm-idwal` (OSM 19400332, beneath Tryfan and the Glyderau) stands in |
+| Entries | Optional `routeId` / `route_id`; the new entry form remembers the last walk in `meta.lastRouteId` |
+| Look out for | Bilingual quick picks per area in `walks.js`; picking one fills the title (Welsh first) and tag |

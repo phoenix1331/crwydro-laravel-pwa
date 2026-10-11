@@ -5,6 +5,8 @@ import { TAGS, tagLabel } from '../data/tags';
 import { formatCoords, formatDateTime, formatRelative, SYNC_BADGES } from './format';
 import { photoUrl } from './object-urls';
 import { photoPicker } from './photo-picker';
+import { walkFields } from './walk-fields';
+import { walkLabel } from '../data/walks';
 
 const helpers = {
     tagLabel,
@@ -13,6 +15,7 @@ const helpers = {
     formatCoords,
     badge: (status) => SYNC_BADGES[status] ?? SYNC_BADGES.local,
     photoUrl,
+    walkLabel,
 };
 
 /**
@@ -102,6 +105,7 @@ export function entryEdit() {
     return {
         ...photoPicker(),
         ...helpers,
+        ...walkFields(),
         tags: TAGS,
         photos: [],
         subscription: null,
@@ -128,7 +132,7 @@ export function entryEdit() {
             this.photoError = null;
 
             if (entry) {
-                Object.assign(this, { id: entry.id, title: entry.title, notes: entry.notes, tag: entry.tag });
+                Object.assign(this, { id: entry.id, title: entry.title, notes: entry.notes, tag: entry.tag, routeId: entry.routeId ?? null, hint: null });
                 subscribe(this, () => photosFor(id), (photos) => {
                     this.photos = photos;
                     this.existingCount = photos.length;
@@ -140,7 +144,7 @@ export function entryEdit() {
             this.saving = true;
 
             try {
-                await updateEntry(this.id, { title: this.title, notes: this.notes, tag: this.tag });
+                await updateEntry(this.id, { title: this.title, notes: this.notes, tag: this.tag, routeId: this.routeId || null });
 
                 if (this.pending.length) {
                     await addPhotos(this.id, this.pending.map(({ blob, thumb, width, height }) => ({ blob, thumb, width, height })));

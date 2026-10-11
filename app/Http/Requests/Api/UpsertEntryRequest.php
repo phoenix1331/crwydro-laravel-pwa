@@ -23,6 +23,7 @@ class UpsertEntryRequest extends FormRequest
             'lng' => ['nullable', 'numeric', 'between:-180,180', 'required_with:lat'],
             'accuracy_m' => ['nullable', 'numeric', 'min:0'],
             'altitude_m' => ['nullable', 'numeric', 'between:-500,9000'],
+            'route_id' => ['nullable', 'string', Rule::in(config('crwydro.routes'))],
             'recorded_at' => ['required', 'date'],
             'client_updated_at' => ['required', 'date'],
         ];

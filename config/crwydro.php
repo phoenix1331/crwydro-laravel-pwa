@@ -17,4 +17,18 @@ return [
 
     'photos_per_entry' => 4,
 
+    /*
+    | Featured walks an entry can be attached to. GeoJSON lives in
+    | public/routes/{id}.geojson (OpenStreetMap data, ODbL).
+    */
+    'routes' => [
+        'yr-wyddfa-llanberis',
+        'cwm-idwal',
+        'cadair-idris-minffordd',
+        'pen-y-fan-pont-ar-daf',
+        'arfordir-penfro',
+        'clawdd-offa',
+        'llwybr-glyndwr',
+    ],
+
 ];
