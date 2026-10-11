@@ -190,6 +190,24 @@ return [
         'other' => 'Other',
     ],
 
+    'storage' => [
+        'title' => 'Storage on this device',
+        'used' => ':used of :quota used',
+        'used_unknown' => 'This browser doesn’t report how much space is left.',
+        'entries_photos' => 'Entries: :entries. Photos: :photos (:size).',
+        'nearly_full' => 'This device is nearly out of space for Crwydro. Sync, then free up space below.',
+        'nearly_full_toast' => 'Crwydro is nearly out of space on this device. Open Sync to free some up.',
+        'persisted' => 'Protected: the browser won’t clear Crwydro to make room.',
+        'not_persisted' => 'Not protected yet: the browser could clear unsynced entries if the device runs low on space.',
+        'not_persisted_ios' => 'On iPhone and iPad, add Crwydro to your Home Screen to protect your entries.',
+        'persist' => 'Protect my entries',
+        'persist_granted' => 'Done. The browser will keep Crwydro’s data.',
+        'persist_refused' => 'The browser said no for now. Installing the app usually changes that.',
+        'free' => 'Free :size',
+        'free_hint' => 'Removes full-size copies of photos already on the server. Thumbnails stay; full photos download again when you open them.',
+        'freed' => 'Freed :size.',
+    ],
+
     'time' => [
         'just_now' => 'just now',
     ],

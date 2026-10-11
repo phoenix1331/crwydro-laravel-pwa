@@ -190,6 +190,24 @@ return [
         'other' => 'Arall',
     ],
 
+    'storage' => [
+        'title' => 'Storio ar y ddyfais hon',
+        'used' => ':used o :quota wedi’i ddefnyddio',
+        'used_unknown' => 'Dydy’r porwr hwn ddim yn dweud faint o le sydd ar ôl.',
+        'entries_photos' => 'Cofnodion: :entries. Lluniau: :photos (:size).',
+        'nearly_full' => 'Mae’r ddyfais hon bron â rhedeg allan o le i Crwydro. Cysonwch, yna rhyddhewch le isod.',
+        'nearly_full_toast' => 'Mae Crwydro bron â rhedeg allan o le ar y ddyfais hon. Agorwch Cysoni i ryddhau lle.',
+        'persisted' => 'Wedi’i warchod: fydd y porwr ddim yn clirio Crwydro i wneud lle.',
+        'not_persisted' => 'Heb ei warchod eto: gallai’r porwr glirio cofnodion heb eu cysoni os yw’r ddyfais yn brin o le.',
+        'not_persisted_ios' => 'Ar iPhone ac iPad, ychwanegwch Crwydro at eich Sgrin Gartref i warchod eich cofnodion.',
+        'persist' => 'Gwarchod fy nghofnodion',
+        'persist_granted' => 'Wedi’i wneud. Bydd y porwr yn cadw data Crwydro.',
+        'persist_refused' => 'Mae’r porwr wedi gwrthod am y tro. Mae gosod yr ap fel arfer yn newid hynny.',
+        'free' => 'Rhyddhau :size',
+        'free_hint' => 'Yn tynnu copïau maint llawn o luniau sydd eisoes ar y gweinydd. Mae’r mân-luniau’n aros; mae lluniau llawn yn llwytho eto pan fyddwch yn eu hagor.',
+        'freed' => 'Wedi rhyddhau :size.',
+    ],
+
     'time' => [
         'just_now' => 'nawr',
     ],

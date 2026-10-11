@@ -2,18 +2,18 @@
     <h1 class="text-3xl" x-text="$t('sync.title')">Sync</h1>
     <p class="hint mt-1 max-w-[60ch]" x-text="$t('sync.intro')">Entries are saved on this device first and copied to your account whenever there's a signal.</p>
 
-    <dl class="mt-6 grid gap-3 sm:grid-cols-3">
-        <div class="card p-5">
-            <dt class="hint" x-text="$t('sync.on_device_only')">On this device only</dt>
-            <dd class="mt-1 text-4xl font-extrabold" :class="$store.sync.unsynced ? 'text-warn' : 'text-ok'" x-text="$store.sync.unsynced"></dd>
+    <dl class="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+        <div class="card p-3 sm:p-5">
+            <dt class="hint text-xs leading-snug sm:text-sm" x-text="$t('sync.on_device_only')">On this device only</dt>
+            <dd class="mt-1 text-3xl font-extrabold sm:text-4xl" :class="$store.sync.unsynced ? 'text-warn' : 'text-ok'" x-text="$store.sync.unsynced"></dd>
         </div>
-        <div class="card p-5">
-            <dt class="hint" x-text="$t('sync.needing_attention')">Needing attention</dt>
-            <dd class="mt-1 text-4xl font-extrabold" :class="$store.sync.failed ? 'text-danger' : 'text-ink'" x-text="$store.sync.failed"></dd>
+        <div class="card p-3 sm:p-5">
+            <dt class="hint text-xs leading-snug sm:text-sm" x-text="$t('sync.needing_attention')">Needing attention</dt>
+            <dd class="mt-1 text-3xl font-extrabold sm:text-4xl" :class="$store.sync.failed ? 'text-danger' : 'text-ink'" x-text="$store.sync.failed"></dd>
         </div>
-        <div class="card p-5">
-            <dt class="hint" x-text="$t('sync.last_synced')">Last synced</dt>
-            <dd class="mt-2.5 text-xl font-extrabold"
+        <div class="card p-3 sm:p-5">
+            <dt class="hint text-xs leading-snug sm:text-sm" x-text="$t('sync.last_synced')">Last synced</dt>
+            <dd class="mt-2 text-base font-extrabold sm:mt-2.5 sm:text-xl"
                 x-text="$store.sync.lastSyncAt ? new Intl.RelativeTimeFormat($store.i18n.locale === 'cy' ? 'cy' : 'en-GB', { numeric: 'auto' }).format(Math.round((Date.parse($store.sync.lastSyncAt) - Date.now()) / 60000), 'minute') : $t('sync.never')"></dd>
         </div>
     </dl>
@@ -47,6 +47,42 @@
                 <span x-text="$t('sync.when_body')">When you open the app, when signal returns and whenever you save.</span>
                 <span x-text="$store.sync.backgroundSync ? $t('sync.background_yes') : $t('sync.background_no')"></span>
             </p>
+        </div>
+    </div>
+
+    <div class="card mt-3 p-5 text-sm" x-show="$store.storage.report" x-cloak>
+        <p class="font-bold" x-text="$t('storage.title')">Storage on this device</p>
+
+        <template x-if="$store.storage.percent() !== null">
+            <div class="mt-3">
+                <div class="h-2.5 overflow-hidden rounded-full bg-sunk" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                     :aria-valuenow="$store.storage.percent()" :aria-label="$t('storage.title')">
+                    <div class="h-full rounded-full transition-[width]" :class="$store.storage.nearlyFull() ? 'bg-danger' : 'bg-accent'"
+                         :style="`width: ${$store.storage.percent()}%`"></div>
+                </div>
+                <p class="hint mt-2" x-text="$t('storage.used', { used: $store.storage.bytes($store.storage.report.usage), quota: $store.storage.bytes($store.storage.report.quota) })"></p>
+            </div>
+        </template>
+        <p class="hint mt-2" x-show="$store.storage.percent() === null" x-text="$t('storage.used_unknown')"></p>
+
+        <p class="hint mt-1" x-text="$t('storage.entries_photos', { entries: $store.storage.report?.entries ?? 0, photos: $store.storage.report?.photos ?? 0, size: $store.storage.bytes($store.storage.report?.photoBytes ?? 0) })"></p>
+
+        <p x-show="$store.storage.nearlyFull()" class="notice mt-3 bg-danger-soft text-danger" role="alert" x-text="$t('storage.nearly_full')"></p>
+
+        <div class="mt-4 flex items-start gap-3">
+            <span class="mt-1 size-2.5 shrink-0 rounded-full" :class="$store.storage.report?.persisted ? 'bg-ok' : 'bg-warn'" aria-hidden="true"></span>
+            <div>
+                <p x-text="$store.storage.report?.persisted ? $t('storage.persisted') : $t('storage.not_persisted')"></p>
+                <p class="hint mt-1" x-show="! $store.storage.report?.persisted && /iPhone|iPad|iPod/.test(navigator.userAgent)" x-text="$t('storage.not_persisted_ios')"></p>
+                <button type="button" class="btn-secondary mt-3 min-h-10 text-sm" x-show="! $store.storage.report?.persisted && $store.storage.report?.supported"
+                        @click="$store.storage.persist()" x-text="$t('storage.persist')"></button>
+            </div>
+        </div>
+
+        <div class="mt-4 border-t border-line pt-4" x-show="$store.storage.report?.freeableBytes > 0">
+            <button type="button" class="btn-secondary min-h-10 text-sm" @click="$store.storage.free()"
+                    x-text="$t('storage.free', { size: $store.storage.bytes($store.storage.report?.freeableBytes ?? 0) })"></button>
+            <p class="hint mt-2" x-text="$t('storage.free_hint')"></p>
         </div>
     </div>
 

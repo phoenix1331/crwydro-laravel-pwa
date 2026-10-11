@@ -7,6 +7,7 @@ import { entryDetail, entryEdit, entryList } from './ui/entries';
 import { entryForm } from './ui/entry-form';
 import { deviceMap } from './ui/map';
 import { networkStore } from './ui/network';
+import { storageStore } from './ui/storage';
 import { syncStore } from './ui/sync';
 import { toastStore } from './ui/toast';
 import { walkList } from './ui/walks';
@@ -19,6 +20,7 @@ Alpine.store('pwa', pwaStore());
 Alpine.store('toast', toastStore());
 Alpine.store('auth', authStore());
 Alpine.store('sync', syncStore());
+Alpine.store('storage', storageStore());
 
 Alpine.data('entryForm', entryForm);
 Alpine.data('entryList', entryList);

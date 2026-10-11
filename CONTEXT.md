@@ -197,3 +197,12 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Server pages | `SetLocaleFromCookie` middleware on the web group, so `/login` and `/map` match the app |
 | Place names | Welsh first with English in brackets in both languages; tag names and walk notes follow the chosen language |
 | Review | Welsh copy was written without a native speaker; get it reviewed before release |
+
+## Storage (`resources/js/data/storage.js`, `resources/js/ui/storage.js`)
+
+| Item | Detail |
+|------|--------|
+| Report | `navigator.storage.estimate()` usage and quota, `persisted()`, entry and photo counts, bytes held in photos; shown on the Sync page |
+| Persistence | `navigator.storage.persist()` requested automatically once there is an entry, and from a "Protect my entries" button; iOS gets Home Screen advice instead |
+| Warning | At 80% of quota: a toast once per session plus a banner linking to Sync |
+| Free space | `freeSyncedPhotos()` drops the full-size Blob of photos the server has, keeping thumbnails; `fetchFullPhoto()` downloads it again on demand |
