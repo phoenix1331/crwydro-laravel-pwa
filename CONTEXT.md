@@ -35,6 +35,7 @@ All artisan, composer and test commands run inside the container: `docker compos
 | Sanctum personal access tokens, long-lived | Walkers can be offline for days; expiry must not strand the outbox |
 | Redis for queue, cache and sessions | Queued thumbnail and EXIF jobs; one fast backing service |
 | MySQL | Project default stack |
+| Photos stored at `photos/{user_id}/{entry_id}/{photo_id}.jpg` on `PHOTOS_DISK` (`config/crwydro.php`) | Deterministic path makes retries overwrite rather than orphan files; local in dev, S3 in production |
 | Alpine.js over Vue | Views are small; revisit if they grow |
 | Millisecond timestamps on `entries` (`$dateFormat = 'Y-m-d H:i:s.v'`, precision 3 columns) | Eloquent drops ms by default; last-write-wins and pull cursors need them |
 
@@ -62,5 +63,6 @@ All artisan, composer and test commands run inside the container: `docker compos
 | `GET /api/ping` | No auth, `Cache-Control: no-store`; client checks it before draining the outbox |
 | `PUT /api/entries/{ulid}` | Upsert via `App\Actions\UpsertEntry`: 201 new, 200 otherwise. Ignores writes with `client_updated_at` <= stored. Never resurrects a soft-deleted entry. 403 if another user owns the ULID. A concurrent duplicate insert falls back to an update |
 | `DELETE /api/entries/{ulid}` | Soft delete, 204 even if unknown or already deleted |
+| `PUT /api/entries/{ulid}/photos/{ulid}` | Raw JPEG body (`Content-Type: image/jpeg`), not multipart, because PHP does not parse multipart on `PUT`. Via `App\Actions\StoreEntryPhoto`: 201 new, 200 if the photo ULID already exists. Server reads dimensions itself. 404 unknown entry, 403 not owner, 413 over `PHOTO_MAX_BYTES`, 422 not JPEG / 4 photos already / ULID on another entry |
 
 Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.123Z`), via `App\Http\Resources\EntryResource`.

@@ -69,3 +69,13 @@ Authorization: Bearer {{token}}
 DELETE {{baseUrl}}/api/entries/01K7A3Q9X2M4N6P8R0S2T4V6W8
 Accept: application/json
 Authorization: Bearer {{token}}
+
+### Photos
+
+# Upload one JPEG as the raw body; repeat it and the server returns 200 without storing a duplicate
+PUT {{baseUrl}}/api/entries/01K7A3Q9X2M4N6P8R0S2T4V6W8/photos/01K7A3RB4C6D8E0F2G4H6J8K0M
+Accept: application/json
+Content-Type: image/jpeg
+Authorization: Bearer {{token}}
+
+< ./tests/Fixtures/photo.jpg

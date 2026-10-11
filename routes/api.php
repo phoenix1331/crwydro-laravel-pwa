@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\EntryController;
+use App\Http\Controllers\Api\EntryPhotoController;
 use App\Http\Controllers\Api\LoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,4 +17,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
 
     Route::put('/entries/{id}', [EntryController::class, 'update'])->whereUlid('id');
     Route::delete('/entries/{id}', [EntryController::class, 'destroy'])->whereUlid('id');
+
+    Route::put('/entries/{entryId}/photos/{photoId}', [EntryPhotoController::class, 'update'])
+        ->whereUlid(['entryId', 'photoId']);
 });
