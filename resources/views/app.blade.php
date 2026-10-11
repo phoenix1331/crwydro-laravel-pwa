@@ -25,13 +25,14 @@
 
         <main class="flex-1 px-4 pt-4 pb-28">
             @include('shell.views.entries')
-            @include('shell.views.placeholder', ['view' => 'new', 'title' => 'New entry'])
+            @include('shell.views.new')
             @include('shell.views.placeholder', ['view' => 'entry', 'title' => 'Entry'])
             @include('shell.views.placeholder', ['view' => 'edit', 'title' => 'Edit entry'])
             @include('shell.views.placeholder', ['view' => 'sync', 'title' => 'Sync'])
             @include('shell.views.placeholder', ['view' => 'login', 'title' => 'Log in'])
         </main>
 
+        @include('shell.toast')
         @include('shell.nav')
     </div>
 </body>
