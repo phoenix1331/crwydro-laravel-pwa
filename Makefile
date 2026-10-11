@@ -3,7 +3,7 @@
 DC = docker compose
 APP = $(DC) exec app
 
-.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js queue-restart routes contours e2e
+.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js queue-restart routes contours e2e parks
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -75,3 +75,6 @@ e2e: ## Run Playwright end-to-end tests against a production build (needs the st
 	@$(APP) sh -c "rm -f public/hot && npm run build" > /dev/null
 	@$(APP) php artisan cache:clear > /dev/null
 	@$(DC) run --rm e2e
+
+parks: ## Re-import national park boundaries from OpenStreetMap (via Nominatim)
+	@python3 -I scripts/import_parks.py public/parks

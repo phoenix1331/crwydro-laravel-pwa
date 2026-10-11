@@ -225,3 +225,12 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | `offline.spec.js` | An entry created offline shows "On this device", stays off the server, then reaches the API once online; the shell, entries and cached routes load with no network |
 | `resume.spec.js` | Three offline entries; the second upload is aborted mid-sync; some stay queued, the server holds the rest exactly once; after backoff all three arrive with no duplicates |
 | Notes | `make e2e` builds assets and clears the cache (login rate limiter) first; tests tag titles with a per-run id instead of resetting the database; Playwright's `@playwright/test` version must match the image tag in `docker-compose.yml` |
+
+## National parks
+
+| Item | Detail |
+|------|--------|
+| Data | `public/parks/national-parks.geojson`: Eryri, Bannau Brycheiniog, Arfordir Penfro; OSM relations via Nominatim (`polygon_threshold` simplified, about 22 KB), precached; `make parks` re-imports; ODbL |
+| Detection | `resources/js/data/parks.js`: ray-casting point-in-polygon (multipolygons and holes) on the device, so it works offline |
+| Display | Worked out when shown, not stored, so pulled entries get it too; entry detail shows "Eryri (Snowdonia)" in English, "Eryri" in Welsh |
+| Tests | Yr Wyddfa, Cadair Idris, Pen y Fan, St Davids Head placed correctly; Cardiff and Aberystwyth in none |

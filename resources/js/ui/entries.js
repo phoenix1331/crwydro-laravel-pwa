@@ -10,6 +10,7 @@ import { photoPicker } from './photo-picker';
 import { walkFields } from './walk-fields';
 import { walkLabel } from '../data/walks';
 import { osGridRef } from '../data/osgrid';
+import { loadParks, parkAt, parkName } from '../data/parks';
 
 const helpers = {
     tagLabel: localised(tagLabel),
@@ -73,6 +74,22 @@ export function entryDetail() {
         photos: [],
         enlarged: null,
         opener: null,
+        parksReady: false,
+
+        async init() {
+            try {
+                await loadParks();
+                this.parksReady = true;
+            } catch {
+                // Boundaries unavailable: entries simply show no park
+            }
+        },
+
+        park(entry) {
+            this.$store.i18n.locale;
+
+            return this.parksReady ? parkName(parkAt(entry?.lat, entry?.lng)) : null;
+        },
         subscription: null,
         currentId: null,
 

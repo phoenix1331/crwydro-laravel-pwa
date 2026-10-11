@@ -18,11 +18,17 @@
                 <time :datetime="entry.recordedAt" x-text="formatDateTime(entry.recordedAt)"></time>
             </p>
 
+            <div class="mt-3 flex flex-wrap gap-2">
+            <span x-show="park(entry)" class="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-ok-soft px-3 text-sm font-bold text-ok">
+                @include('shell.icon', ['name' => 'peak', 'class' => 'size-4'])
+                <span x-text="park(entry)"></span>
+            </span>
             <a x-show="entry.routeId" :href="`#/map/${entry.routeId}`"
-               class="mt-3 inline-flex min-h-9 items-center gap-1.5 rounded-full bg-accent-soft px-3 text-sm font-bold text-accent hover:underline">
+               class="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-accent-soft px-3 text-sm font-bold text-accent hover:underline">
                 @include('shell.icon', ['name' => 'walks', 'class' => 'size-4'])
                 <span x-text="walkLabel(entry.routeId)"></span>
             </a>
+            </div>
 
             <p x-show="entry.syncError" class="notice mt-4 bg-danger-soft text-danger" role="alert">
                 <span x-text="entry.syncError"></span>
