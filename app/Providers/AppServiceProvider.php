@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // FrankenPHP already serves the app inside the container, so `artisan dev` only runs the queue, logs and Vite
-        DevCommands::except('server');
+        // FrankenPHP serves the app and the `queue` container runs the worker, so `artisan dev` only runs logs and Vite
+        DevCommands::except('server', 'queue');
     }
 }

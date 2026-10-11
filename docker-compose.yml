@@ -23,6 +23,19 @@ services:
       retries: 10
       start_period: 15s
 
+  queue:
+    image: crwydro-app
+    command: php artisan queue:work --tries=3 --sleep=1
+    volumes:
+      - .:/app
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+    # The base image's check probes the web server, which this worker never runs
+    healthcheck:
+      disable: true
+
   mysql:
     image: mysql:8.4
     ports:

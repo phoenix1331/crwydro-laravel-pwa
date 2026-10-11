@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
+use App\Jobs\ProcessEntryPhoto;
 use App\Models\Entry;
 use App\Models\EntryPhoto;
 use finfo;
@@ -52,6 +53,8 @@ class StoreEntryPhoto
             // A concurrent retry stored it first; the file path is deterministic so nothing to clean up
             return [$this->guardSameEntry(EntryPhoto::findOrFail($id), $entry), false];
         }
+
+        ProcessEntryPhoto::dispatch($photo->id);
 
         return [$photo, true];
     }

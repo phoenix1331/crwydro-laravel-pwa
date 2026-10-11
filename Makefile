@@ -3,7 +3,7 @@
 DC = docker compose
 APP = $(DC) exec app
 
-.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js
+.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js queue-restart
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -61,3 +61,6 @@ assets: ## Build front-end assets for production (stops the Vite dev server hot 
 
 test-js: ## Run the Vitest suite
 	@$(APP) npm test
+
+queue-restart: ## Restart the queue worker so it picks up code changes
+	@$(DC) restart queue

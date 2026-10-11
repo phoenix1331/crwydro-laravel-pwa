@@ -8,11 +8,12 @@ Offline-first, bilingual (Welsh/English) PWA field journal for walkers in the We
 |---------|-------|-----------|-------|
 | `app` | `dunglas/frankenphp:php8.4` + Node 24 (see `Dockerfile`) | 8000, 5173 (Vite) | Project mounted at `/app`, runs as host UID/GID |
 | `mysql` | `mysql:8.4` | 3307 | 3306 is taken on the dev host; `FORWARD_DB_PORT` |
+| `queue` | `crwydro-app` (same image) | none | `php artisan queue:work`; `make queue-restart` after code changes |
 | `redis` | `redis:7-alpine` | not exposed | Sessions, cache, queue |
 
 All artisan, composer, npm and test commands run inside the container: `docker compose exec app ...`
 
-`make dev` runs `php artisan dev` in the container. `AppServiceProvider` drops its `server` process (FrankenPHP already serves), leaving queue, logs and Vite. `make assets` builds for production and removes `public/hot`; offline and service worker testing needs a production build.
+`make dev` runs `php artisan dev` in the container. `AppServiceProvider` drops its `server` and `queue` processes (FrankenPHP serves, the `queue` container works jobs), leaving logs and Vite. `make assets` builds for production and removes `public/hot`; offline and service worker testing needs a production build.
 
 ## Architecture at a glance
 
@@ -47,6 +48,7 @@ All artisan, composer, npm and test commands run inside the container: `docker c
 | Service worker via `vite-plugin-pwa` `injectManifest` (`resources/js/sw.js`) | Custom worker needed later for Background Sync; worker emitted to `public/sw.js` so its scope is `/` |
 | `/` shell precached with a per-build revision (`__BUILD_ID__`) | Server-rendered shell refreshes with each deploy alongside hashed assets |
 | `registerType: 'prompt'` (`resources/js/pwa.js`) | Never swap code under a walker mid-trip; they choose when to update |
+| Server re-encodes every photo in `App\Jobs\ProcessEntryPhoto` (Intervention Image v4, GD): strips EXIF, caps at 1600px, writes `{id}_thumb.jpg` at 400px | Defence in depth for non-browser clients; precise locations live only in entry fields |
 | Alpine.js over Vue | Views are small; revisit if they grow |
 | Millisecond timestamps on `entries` (`$dateFormat = 'Y-m-d H:i:s.v'`, precision 3 columns) | Eloquent drops ms by default; last-write-wins and pull cursors need them |
 
