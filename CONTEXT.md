@@ -25,6 +25,7 @@ All artisan, composer, npm and test commands run inside the container: `docker c
 | `docker-compose.yml`, `Dockerfile` | Containerised runtime |
 | `Makefile` | All developer commands |
 | `request.http` | Example API requests |
+| `resources/js/sync/` | Outbox processor (`processor.js`), API wrapper with ping (`api.js`), backoff |
 | `resources/js/data/` | Dexie schema (`db.js`), entry repository (`entries.js`), outbox queue (`outbox.js`) |
 | `tests/` | Pest feature and unit tests (SQLite in-memory via `phpunit.xml`) |
 | `tests/js/` | Vitest suite over `fake-indexeddb` (`make test-js`) |
@@ -103,3 +104,17 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Editing an entry revives a `failed` put | The walker fixing data is the retry |
 | `updatedAt` always moves forward at least 1 ms (`nextTimestamp`) | Last-write-wins needs strictly ordered edits |
 | IDs from `ulid` `monotonicFactory` | Sortable and unique even when minted in the same millisecond |
+
+## Push sync (`resources/js/sync/processor.js`)
+
+| Rule | Detail |
+|------|--------|
+| Preconditions | Token in `meta`, no `authRequired` flag, `GET /api/ping` answers within 3 s |
+| Order | Rows sent in `seq` order; once a row for an entry is waiting or failed, later rows for that entry are held while other entries continue |
+| Success | Row removed only if its `rev` is unchanged since sending; entry badge recomputed; synced deletes purged from the device |
+| Network error or timeout | Row kept, backed off, run stops (`interrupted`) |
+| 401 | Run stops, `meta.authRequired = true`, outbox untouched |
+| 408, 409, 429, 5xx | Retry with backoff: 5 s doubling to a 15 min cap, plus or minus 20% jitter (`backoff.js`) |
+| Other 4xx | Row `failed` with the server's message; entry badge `failed`; editing the entry or `retryFailed()` revives it |
+| Single runner | `runSync()` uses the Web Locks API (`crwydro-sync`) so tabs and the service worker never drain at once |
+| Environment | No `window` use, so the service worker can run it for Background Sync |
