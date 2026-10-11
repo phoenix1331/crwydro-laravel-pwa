@@ -1,0 +1,45 @@
+.DEFAULT_GOAL := help
+
+DC = docker compose
+APP = $(DC) exec app
+
+.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker
+
+help: ## Show available targets
+	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
+
+up: ## Start all containers in the background
+	@$(DC) up -d
+
+down: ## Stop all containers
+	@$(DC) down
+
+build: ## Rebuild container images
+	@$(DC) build
+
+shell: ## Open a shell in the app container
+	@$(APP) bash
+
+migrate: ## Run database migrations
+	@$(APP) php artisan migrate
+
+seed: ## Seed the database
+	@$(APP) php artisan db:seed
+
+test: ## Run the test suite
+	@$(APP) php artisan test
+
+logs: ## Tail app container logs
+	@$(DC) logs -f app
+
+fresh: ## Drop all tables, migrate and seed
+	@$(APP) php artisan migrate:fresh --seed
+
+artisan: ## Run an artisan command, e.g. make artisan cmd="route:list"
+	@$(APP) php artisan $(cmd)
+
+composer: ## Run a composer command, e.g. make composer cmd="require foo/bar"
+	@$(APP) composer $(cmd)
+
+tinker: ## Open a tinker session
+	@$(APP) php artisan tinker
