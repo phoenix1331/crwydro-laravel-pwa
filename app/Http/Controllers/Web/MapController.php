@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Web;
 
+use App\Enums\Tag;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MapEntryResource;
 use Illuminate\Http\Request;
@@ -25,6 +26,11 @@ class MapController extends Controller
         return view('web.map', [
             'entries' => MapEntryResource::collection($entries)->resolve($request),
             'routes' => $entries->pluck('route_id')->filter()->unique()->values(),
+            'labels' => [
+                'tags' => collect(Tag::cases())->mapWithKeys(fn (Tag $tag): array => [$tag->value => __("app.tags.{$tag->value}")]),
+                'route' => __('app.map.route'),
+                'key' => __('app.map.key'),
+            ],
         ]);
     }
 }

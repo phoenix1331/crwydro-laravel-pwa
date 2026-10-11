@@ -29,7 +29,10 @@
         </aside>
 
         <main class="lg:grid lg:h-dvh lg:grid-cols-[minmax(0,1fr)_24rem]">
-            <div id="map" class="z-0 h-[55dvh] bg-sunk lg:h-full"></div>
+            <div class="relative h-[55dvh] lg:h-full">
+                <div id="map" class="absolute inset-0 z-0 bg-sunk"></div>
+                <div id="map-key" class="absolute bottom-6 left-3 right-3 z-[500] rounded-control bg-surface/95 px-3 py-2 text-xs shadow md:right-auto"></div>
+            </div>
 
             <details class="group bg-surface lg:overflow-y-auto lg:border-l lg:border-line" open>
                 <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 border-b border-line px-4 py-3 lg:cursor-default">
@@ -77,5 +80,5 @@
         </main>
     </div>
 
-    <script type="application/json" id="map-data">@json(['entries' => $entries, 'routes' => $routes])</script>
+    <script type="application/json" id="map-data">@json(['entries' => $entries, 'routes' => $routes, 'labels' => $labels])</script>
 @endsection

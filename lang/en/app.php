@@ -132,7 +132,8 @@ return [
     'map' => [
         'walk' => 'Walk',
         'all_wales' => 'All of Wales',
-        'by_tag' => 'Entries by tag',
+        'key' => 'Map key',
+        'route' => 'Walk route',
         'locate' => 'Show my location',
         'offline' => 'Offline: the base map only shows areas you viewed with signal. Routes and your entries are always here.',
     ],

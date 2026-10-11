@@ -132,7 +132,8 @@ return [
     'map' => [
         'walk' => 'Taith',
         'all_wales' => 'Cymru gyfan',
-        'by_tag' => 'Cofnodion yn ôl tag',
+        'key' => 'Allwedd y map',
+        'route' => 'Llwybr taith',
         'locate' => 'Dangos fy lleoliad',
         'offline' => 'All-lein: dim ond yr ardaloedd a welsoch gyda signal sydd ar y map sylfaen. Mae’r llwybrau a’ch cofnodion yma bob amser.',
     ],

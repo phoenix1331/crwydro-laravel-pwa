@@ -1,21 +1,34 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { ROUTE_STYLE, tagColour } from './data/map-style';
 
 const WALES = [
     [51.35, -5.35],
     [53.45, -2.65],
 ];
 
-const TAG_COLOURS = {
-    flower: '#c8741f',
-    bird: '#2f6db5',
-    fungus: '#7a4f2a',
-    insect: '#8a3fa0',
-    view: '#3e6330',
-    other: '#4a5a46',
-};
+const { entries, routes, labels } = JSON.parse(document.getElementById('map-data').textContent);
 
-const { entries, routes } = JSON.parse(document.getElementById('map-data').textContent);
+// Key: what the dots and the dashed lines mean
+const key = document.getElementById('map-key');
+key.setAttribute('role', 'group');
+key.setAttribute('aria-label', labels.key);
+key.innerHTML = '<ul class="flex flex-wrap items-center gap-x-3 gap-y-1.5"></ul>';
+
+for (const [tag, label] of Object.entries(labels.tags)) {
+    const item = document.createElement('li');
+    item.className = 'flex items-center gap-1.5';
+    item.innerHTML = '<span class="size-2.5 rounded-full ring-2 ring-surface" aria-hidden="true"></span><span></span>';
+    item.firstChild.style.background = tagColour(tag);
+    item.lastChild.textContent = label;
+    key.firstChild.append(item);
+}
+
+const routeItem = document.createElement('li');
+routeItem.className = 'flex items-center gap-1.5';
+routeItem.innerHTML = '<svg viewBox="0 0 24 6" class="h-1.5 w-6" aria-hidden="true"><path d="M1 3h22" stroke="#8a2d6b" stroke-width="3" stroke-dasharray="6 4" stroke-linecap="round" /></svg><span></span>';
+routeItem.lastChild.textContent = labels.route;
+key.firstChild.append(routeItem);
 
 const map = L.map('map').fitBounds(WALES);
 
@@ -27,7 +40,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 for (const id of routes) {
     fetch(`/routes/${id}.geojson`)
         .then((response) => response.json())
-        .then((geojson) => L.geoJSON(geojson, { style: { color: '#8a2d6b', weight: 4, opacity: 0.8 } }).addTo(map))
+        .then((geojson) => L.geoJSON(geojson, { style: ROUTE_STYLE }).addTo(map))
         .catch(() => {});
 }
 
@@ -86,7 +99,7 @@ for (const entry of located) {
         radius: 9,
         color: '#fff',
         weight: 2,
-        fillColor: TAG_COLOURS[entry.tag] ?? TAG_COLOURS.other,
+        fillColor: tagColour(entry.tag),
         fillOpacity: 0.95,
     })
         .bindPopup(() => popup(entry), { maxWidth: 280 })

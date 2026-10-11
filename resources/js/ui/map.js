@@ -1,21 +1,13 @@
 import { liveQuery } from 'dexie';
 import { listEntries } from '../data/entries';
 import { TAGS, tagLabel } from '../data/tags';
+import { ROUTE_STYLE, tagColour } from '../data/map-style';
 import { routeUrl, walkById, WALKS } from '../data/walks';
 
 const WALES = [
     [51.35, -5.35],
     [53.45, -2.65],
 ];
-
-const TAG_COLOURS = {
-    flower: '#c8741f',
-    bird: '#2f6db5',
-    fungus: '#7a4f2a',
-    insect: '#8a3fa0',
-    view: '#3e6330',
-    other: '#4a5a46',
-};
 
 export const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
@@ -38,9 +30,7 @@ export function deviceMap() {
         walks: WALKS,
         tags: TAGS,
 
-        tagColour(key) {
-            return TAG_COLOURS[key] ?? TAG_COLOURS.other;
-        },
+        tagColour,
 
         async show(route, walkId) {
             if (route !== 'map') {
@@ -109,7 +99,7 @@ export function deviceMap() {
                 const geojson = await (await fetch(routeUrl(walk.id))).json();
 
                 this.routes[walk.id] = this.leaflet
-                    .geoJSON(geojson, { style: { color: '#8a2d6b', weight: 4, opacity: 0.8 } })
+                    .geoJSON(geojson, { style: ROUTE_STYLE })
                     .bindTooltip(`${walk.cy} (${walk.en})`)
                     .addTo(this.map);
             } catch {
@@ -132,7 +122,7 @@ export function deviceMap() {
                     radius: 9,
                     color: '#fff',
                     weight: 2,
-                    fillColor: TAG_COLOURS[entry.tag] ?? TAG_COLOURS.other,
+                    fillColor: tagColour(entry.tag),
                     fillOpacity: 0.95,
                 })
                     .bindPopup(popup)
