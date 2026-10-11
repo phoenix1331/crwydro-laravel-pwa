@@ -178,4 +178,6 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Radius | `rounded-panel` 20, `rounded-card` 14, `rounded-control` 12, chips `rounded-full` |
 | Components | `@utility` classes: `btn`, `btn-primary`, `btn-secondary`, `btn-quiet`, `btn-danger`, `field`, `label`, `hint`, `card`, `chip`, `chip-on`, `notice`, `no-scrollbar` |
 | Breakpoints | Phone below `md` (768px): contour header, bottom nav with central New. `md`+: 15.5rem contour sidebar with New, nav and sync summary. `lg` (1024px)+: list and detail side by side |
+| Journal layout | `entries` and `entry` share a wrapper in `app.blade.php`: below `lg` they are separate screens (`max-lg:hidden` on the list while an entry is open); from `lg` the list sits beside a sticky detail panel, with a placeholder when nothing is chosen |
+| Grid references | `resources/js/data/osgrid.js` converts WGS84 to an OS National Grid reference (Helmert to OSGB36, then Transverse Mercator); shown as the main location on an entry; tested against Yr Wyddfa, Pen y Fan and Cadair Idris summits |
 | Avoid | Middle-dot metadata strings, arrows appended to links, all-caps labels, `font-semibold` (600 is not loaded) |

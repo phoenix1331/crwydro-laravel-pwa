@@ -8,6 +8,7 @@ import { photoUrl } from './object-urls';
 import { photoPicker } from './photo-picker';
 import { walkFields } from './walk-fields';
 import { walkLabel } from '../data/walks';
+import { osGridRef } from '../data/osgrid';
 
 const helpers = {
     tagLabel,
@@ -17,6 +18,7 @@ const helpers = {
     badge: (status) => SYNC_BADGES[status] ?? SYNC_BADGES.local,
     photoUrl,
     walkLabel,
+    osGridRef,
 };
 
 /**
@@ -103,6 +105,16 @@ export function entryDetail() {
                     this.enlarged = { ...photo, blob };
                 }
             }
+        },
+
+        step(direction) {
+            if (!this.enlarged || this.photos.length < 2) {
+                return;
+            }
+
+            const index = this.photos.findIndex((photo) => photo.id === this.enlarged.id);
+
+            this.open(this.photos[(index + direction + this.photos.length) % this.photos.length]);
         },
 
         async remove() {

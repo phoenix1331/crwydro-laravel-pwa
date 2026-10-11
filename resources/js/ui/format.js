@@ -35,8 +35,8 @@ export function formatCoords(entry) {
 }
 
 export const SYNC_BADGES = {
-    local: { label: 'On this device', classes: 'bg-warn-soft text-warn' },
-    syncing: { label: 'Syncing', classes: 'bg-sunk text-muted' },
-    synced: { label: 'Synced', classes: 'bg-ok-soft text-ok' },
-    failed: { label: 'Needs attention', classes: 'bg-danger-soft text-danger' },
+    local: { label: 'On this device', classes: 'bg-warn-soft text-warn', text: 'text-warn', dot: 'bg-warn' },
+    syncing: { label: 'Syncing', classes: 'bg-sunk text-muted', text: 'text-muted', dot: 'bg-faint animate-pulse' },
+    synced: { label: 'Synced', classes: 'bg-ok-soft text-ok', text: 'text-ok', dot: 'bg-ok' },
+    failed: { label: 'Needs attention', classes: 'bg-danger-soft text-danger', text: 'text-danger', dot: 'bg-danger' },
 };

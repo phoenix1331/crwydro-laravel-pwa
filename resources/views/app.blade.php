@@ -28,9 +28,12 @@
             @include('shell.banners')
 
             <main class="flex-1 px-4 pt-5 pb-28 md:px-8 md:pt-8 md:pb-10 lg:px-10">
-                @include('shell.views.entries')
+                <div x-data x-show="$store.router.is('entries', 'entry')"
+                     class="mx-auto max-w-3xl lg:grid lg:max-w-7xl lg:grid-cols-[minmax(20rem,26rem)_minmax(0,1fr)] lg:items-start lg:gap-8">
+                    @include('shell.views.entries')
+                    @include('shell.views.entry')
+                </div>
                 @include('shell.views.new')
-                @include('shell.views.entry')
                 @include('shell.views.edit')
                 @include('shell.views.walks')
                 @include('shell.views.map')
