@@ -27,3 +27,7 @@ Homestead.yaml
 Thumbs.db
 .claude/
 /.playwright-mcp
+/public/sw.js
+/public/sw.js.map
+/public/workbox-*.js
+
