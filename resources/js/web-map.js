@@ -101,6 +101,8 @@ document.getElementById('entry-list')?.addEventListener('click', (event) => {
     const marker = markers[event.target.closest('[data-entry]')?.dataset.entry];
 
     if (marker) {
+        // On phones the map sits above the list, so bring it into view first
+        document.getElementById('map').scrollIntoView({ behavior: 'smooth', block: 'start' });
         map.setView(marker.getLatLng(), Math.max(map.getZoom(), 14));
         marker.openPopup();
     }

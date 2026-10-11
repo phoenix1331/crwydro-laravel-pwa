@@ -1,9 +1,9 @@
 <section x-data="loginForm" x-show="$store.router.is('login')" x-cloak class="mx-auto max-w-md">
-    <h1 class="text-2xl font-bold">Log in to sync</h1>
-    <p class="mt-1 mb-5 text-muted">You can keep logging entries without an account. Logging in backs them up to the server.</p>
+    <h1 class="text-3xl">Log in to sync</h1>
+    <p class="hint mt-1 mb-6">You can keep logging entries without an account. Logging in backs them up to the server.</p>
 
     <p x-show="$store.auth.authRequired"
-       class="mb-5 rounded-xl bg-warn-soft px-4 py-3 text-sm font-bold text-warn">
+       class="notice mb-5 bg-warn-soft text-warn">
         Your session ended. Log in again to carry on syncing. Nothing on this device has been lost.
     </p>
 
@@ -18,7 +18,7 @@
             <input id="login-password" type="password" class="field" x-model="password" autocomplete="current-password" required>
         </div>
 
-        <p x-show="error" x-text="error" class="rounded-xl bg-danger-soft px-4 py-3 text-sm font-bold text-danger" role="alert"></p>
+        <p x-show="error" x-text="error" class="notice bg-danger-soft text-danger" role="alert"></p>
 
         <button type="submit" class="btn-primary w-full" :disabled="busy">
             <span x-text="busy ? 'Logging in…' : 'Log in'"></span>
