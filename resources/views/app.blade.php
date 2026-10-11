@@ -29,7 +29,7 @@
             @include('shell.views.entry')
             @include('shell.views.edit')
             @include('shell.views.placeholder', ['view' => 'sync', 'title' => 'Sync'])
-            @include('shell.views.placeholder', ['view' => 'login', 'title' => 'Log in'])
+            @include('shell.views.login')
         </main>
 
         @include('shell.toast')

@@ -59,6 +59,9 @@ All artisan, composer, npm and test commands run inside the container: `docker c
 | Guard | `auth:sanctum` on all `/api/*` routes except `login` and `ping` |
 | Throttle | `throttle:10,1` on login |
 | Demo user | `walker@crwydro.test` / `password` (seeded) |
+| Client storage | Token, user and `authRequired` in Dexie `meta` (`resources/js/data/auth.js`); login is optional, entries work without it |
+| Re-login | A 401 sets `authRequired`; header banner links to `#/login`; logging in again replaces only the token, never the outbox |
+| Known limit | v1 assumes one walker per device: logging in as someone else would push the existing outbox to their account |
 
 ## Data model
 

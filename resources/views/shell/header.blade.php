@@ -14,4 +14,9 @@
          class="bg-bracken-500 px-4 py-2 text-center text-sm font-semibold text-white" role="status">
         You're offline. Entries are saved on this device.
     </div>
+
+    <a x-data x-show="$store.auth.authRequired && ! $store.router.is('login')" x-cloak href="#/login"
+       class="block bg-peat-900 px-4 py-2 text-center text-sm font-semibold text-white" role="status">
+        Log in again to sync. Your entries are safe on this device. &rarr;
+    </a>
 </header>
