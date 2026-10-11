@@ -22,6 +22,7 @@ All artisan, composer and test commands run inside the container: `docker compos
 | `docker-compose.yml`, `Dockerfile` | Containerised runtime |
 | `Makefile` | All developer commands |
 | `request.http` | Example API requests |
+| `tests/` | Pest feature and unit tests (SQLite in-memory via `phpunit.xml`) |
 
 ## Key decisions
 
@@ -35,3 +36,13 @@ All artisan, composer and test commands run inside the container: `docker compos
 | Redis for queue, cache and sessions | Queued thumbnail and EXIF jobs; one fast backing service |
 | MySQL | Project default stack |
 | Alpine.js over Vue | Views are small; revisit if they grow |
+
+## Auth
+
+| Item | Detail |
+|------|--------|
+| Login | `POST /api/login` with `email`, `password`, `device_name`; returns `token` and `user` |
+| Token | Sanctum personal access token, `sanctum.expiration` null (never expires); one token per device name |
+| Guard | `auth:sanctum` on all `/api/*` routes except `login` and `ping` |
+| Throttle | `throttle:10,1` on login |
+| Demo user | `walker@crwydro.test` / `password` (seeded) |

@@ -1,0 +1,23 @@
+@baseUrl = http://localhost:8000
+# Paste the token returned by the login request here
+@token = paste-token-here
+
+### Auth
+
+# Log in as the seeded demo walker and receive a long-lived Sanctum token
+POST {{baseUrl}}/api/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "walker@crwydro.test",
+    "password": "password",
+    "device_name": "rest-client"
+}
+
+###
+
+# Return the authenticated user, confirming the token works
+GET {{baseUrl}}/api/user
+Accept: application/json
+Authorization: Bearer {{token}}
