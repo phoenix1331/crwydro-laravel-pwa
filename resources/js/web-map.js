@@ -27,7 +27,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 for (const id of routes) {
     fetch(`/routes/${id}.geojson`)
         .then((response) => response.json())
-        .then((geojson) => L.geoJSON(geojson, { style: { color: '#2f4c25', weight: 4, opacity: 0.7 } }).addTo(map))
+        .then((geojson) => L.geoJSON(geojson, { style: { color: '#8a2d6b', weight: 4, opacity: 0.8 } }).addTo(map))
         .catch(() => {});
 }
 

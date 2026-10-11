@@ -1,6 +1,6 @@
 import { liveQuery } from 'dexie';
 import { listEntries } from '../data/entries';
-import { tagLabel } from '../data/tags';
+import { TAGS, tagLabel } from '../data/tags';
 import { routeUrl, walkById, WALKS } from '../data/walks';
 
 const WALES = [
@@ -28,20 +28,27 @@ export const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 export function deviceMap() {
     return {
         map: null,
+        ready: null,
         leaflet: null,
         markers: null,
         routes: {},
         subscription: null,
         focusedWalk: null,
+        walks: WALKS,
+        tags: TAGS,
+
+        tagColour(key) {
+            return TAG_COLOURS[key] ?? TAG_COLOURS.other;
+        },
 
         async show(route, walkId) {
             if (route !== 'map') {
                 return;
             }
 
-            if (!this.map) {
-                await this.create();
-            }
+            // Route changes can call this twice before the map exists; both wait for one creation
+            this.ready ??= this.create();
+            await this.ready;
 
             // Leaflet measures its container, which was hidden until now
             this.$nextTick(() => {
@@ -77,7 +84,7 @@ export function deviceMap() {
                 const geojson = await (await fetch(routeUrl(walk.id))).json();
 
                 this.routes[walk.id] = this.leaflet
-                    .geoJSON(geojson, { style: { color: '#2f4c25', weight: 4, opacity: 0.75 } })
+                    .geoJSON(geojson, { style: { color: '#8a2d6b', weight: 4, opacity: 0.8 } })
                     .bindTooltip(`${walk.cy} (${walk.en})`)
                     .addTo(this.map);
             } catch {
@@ -108,12 +115,24 @@ export function deviceMap() {
             }
         },
 
+        lastWalkId: undefined,
+
+        // Only move the map when the chosen walk changes, so returning to the map keeps the walker's view
         focus(walkId) {
+            if ((walkId ?? null) === this.lastWalkId) {
+                return;
+            }
+
+            this.lastWalkId = walkId ?? null;
             this.focusedWalk = walkById(walkId);
 
             if (this.focusedWalk && this.routes[walkId]) {
                 this.map.fitBounds(this.routes[walkId].getBounds(), { padding: [24, 24] });
+
+                return;
             }
+
+            this.map.fitBounds(WALES);
         },
 
         locate() {
