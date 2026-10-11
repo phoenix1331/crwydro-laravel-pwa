@@ -29,6 +29,7 @@ export function deviceMap() {
     return {
         map: null,
         ready: null,
+        positioned: false,
         leaflet: null,
         markers: null,
         routes: {},
@@ -50,10 +51,34 @@ export function deviceMap() {
             this.ready ??= this.create();
             await this.ready;
 
-            // Leaflet measures its container, which was hidden until now
-            this.$nextTick(() => {
-                this.map.invalidateSize();
-                this.focus(walkId);
+            // The view was hidden until now: wait until it has a size, or Leaflet fits to a 0×0 box
+            // (zooming to the whole world or to street level)
+            await this.whenVisible();
+
+            this.map.invalidateSize();
+
+            // The initial Wales view was set while hidden; redo it now the map can be measured
+            if (!this.positioned && !walkId) {
+                this.map.fitBounds(WALES);
+            }
+
+            this.positioned = true;
+            this.focus(walkId);
+        },
+
+        whenVisible() {
+            return new Promise((resolve) => {
+                const check = (attempts) => {
+                    if (this.$refs.map.clientWidth > 0 || attempts > 60) {
+                        resolve();
+
+                        return;
+                    }
+
+                    requestAnimationFrame(() => check(attempts + 1));
+                };
+
+                check(0);
             });
         },
 
@@ -115,24 +140,17 @@ export function deviceMap() {
             }
         },
 
-        lastWalkId: undefined,
-
-        // Only move the map when the chosen walk changes, so returning to the map keeps the walker's view
+        /**
+         * "Show on map" for a walk always fits that walk, even if it was shown
+         * before. Opening the map without a walk keeps whatever view the
+         * walker left it at.
+         */
         focus(walkId) {
-            if ((walkId ?? null) === this.lastWalkId) {
-                return;
-            }
-
-            this.lastWalkId = walkId ?? null;
             this.focusedWalk = walkById(walkId);
 
             if (this.focusedWalk && this.routes[walkId]) {
                 this.map.fitBounds(this.routes[walkId].getBounds(), { padding: [24, 24] });
-
-                return;
             }
-
-            this.map.fitBounds(WALES);
         },
 
         locate() {
