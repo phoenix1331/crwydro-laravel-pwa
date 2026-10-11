@@ -121,3 +121,6 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Other 4xx | Row `failed` with the server's message; entry badge `failed`; editing the entry or `retryFailed()` revives it |
 | Single runner | `runSync()` uses the Web Locks API (`crwydro-sync`) so tabs and the service worker never drain at once |
 | Environment | No `window` use, so the service worker can run it for Background Sync |
+| Triggers (`resources/js/ui/sync.js`) | App open, `online`, `visibilitychange` to visible, Sync now, `crwydro:sync-requested` (fired after every local write and after login), a timer for the earliest backed-off row |
+| Background Sync | Each trigger also registers the `crwydro-outbox` tag; `sw.js` runs `runSync()` on `sync` and rejects on `offline` or `interrupted` so Chromium retries. Safari and Firefox rely on the page triggers |
+| Stale badges | A run resets any `syncing` badge left by a cut-off run before it starts |

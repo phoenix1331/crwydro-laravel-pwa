@@ -142,6 +142,9 @@ export async function processOutbox({ fetch: fetchImpl, now = Date.now, random =
         return { status: RESULT_AUTH_REQUIRED };
     }
 
+    // A badge left on `syncing` means a previous run was cut off (app closed mid-request)
+    await db.entries.where('syncStatus').equals(SYNC_SYNCING).modify({ syncStatus: SYNC_LOCAL });
+
     const api = createApi({ token, fetch: fetchImpl });
 
     if (!(await api.ping())) {

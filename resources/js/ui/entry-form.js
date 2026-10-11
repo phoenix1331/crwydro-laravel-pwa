@@ -55,6 +55,7 @@ export function entryForm() {
                 return;
             }
 
+            window.dispatchEvent(new CustomEvent('crwydro:sync-requested'));
             this.$store.toast.show(location ? 'Saved on this device.' : LOCATION_MESSAGES[reason], location ? 'success' : 'warning');
             this.reset();
             this.$store.router.go('/');

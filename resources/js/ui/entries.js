@@ -69,6 +69,7 @@ export function entryDetail() {
             }
 
             await deleteEntry(this.entry.id);
+            window.dispatchEvent(new CustomEvent('crwydro:sync-requested'));
             this.$store.toast.show('Entry deleted.');
             this.$store.router.go('/');
         },
@@ -115,6 +116,7 @@ export function entryEdit() {
             }
 
             this.saving = false;
+            window.dispatchEvent(new CustomEvent('crwydro:sync-requested'));
             this.$store.toast.show('Changes saved on this device.', 'success');
             this.$store.router.go(`/entries/${this.id}`);
         },
