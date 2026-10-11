@@ -34,6 +34,8 @@
         </button>
     </div>
 
-    <button type="button" class="-mt-4 self-start text-sm font-bold text-panel-muted underline-offset-4 hover:text-panel-ink hover:underline"
-            @click="$store.i18n.toggle()" :aria-label="$t('language.switch_label')" x-text="$t('language.switch')">Cymraeg</button>
+    <div class="-mt-4 flex items-center gap-2 text-sm font-bold text-panel-muted">
+        @include('shell.language-toggle')
+        <span x-text="$t('language.switch')" aria-hidden="true">Cymraeg</span>
+    </div>
 </aside>

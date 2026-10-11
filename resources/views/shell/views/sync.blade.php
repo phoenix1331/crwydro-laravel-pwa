@@ -89,11 +89,17 @@
     <div class="card mt-3 flex items-center justify-between gap-4 p-5 text-sm">
         <div>
             <p class="font-bold" x-text="$t('language.label')">Language</p>
-            <p class="hint mt-1">Cymraeg / English</p>
+            <p class="hint mt-1" x-text="$store.i18n.locale === 'cy' ? 'Cymraeg' : 'English'">English</p>
         </div>
         <div class="flex gap-2" role="group" :aria-label="$t('language.label')">
-            <button type="button" class="chip" :class="$store.i18n.locale === 'cy' && 'chip-on'" :aria-pressed="$store.i18n.locale === 'cy'" @click="$store.i18n.set('cy')" lang="cy">Cymraeg</button>
-            <button type="button" class="chip" :class="$store.i18n.locale === 'en' && 'chip-on'" :aria-pressed="$store.i18n.locale === 'en'" @click="$store.i18n.set('en')" lang="en">English</button>
+            <button type="button" class="rounded-control p-1.5 ring-2 transition" :class="$store.i18n.locale === 'cy' ? 'ring-accent' : 'ring-transparent hover:ring-line-strong'"
+                    :aria-pressed="$store.i18n.locale === 'cy'" @click="$store.i18n.set('cy')" lang="cy" aria-label="Cymraeg" title="Cymraeg">
+                <img src="/icons/flags/cy.svg" alt="" class="h-6 w-10 rounded-[3px] object-cover shadow-[0_0_0_1px_var(--line)]" width="40" height="24">
+            </button>
+            <button type="button" class="rounded-control p-1.5 ring-2 transition" :class="$store.i18n.locale === 'en' ? 'ring-accent' : 'ring-transparent hover:ring-line-strong'"
+                    :aria-pressed="$store.i18n.locale === 'en'" @click="$store.i18n.set('en')" lang="en" aria-label="English" title="English">
+                <img src="/icons/flags/en.svg" alt="" class="h-6 w-10 rounded-[3px] object-cover shadow-[0_0_0_1px_var(--line)]" width="40" height="24">
+            </button>
         </div>
     </div>
 </section>

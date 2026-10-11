@@ -182,6 +182,7 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Grid references | `resources/js/data/osgrid.js` converts WGS84 to an OS National Grid reference (Helmert to OSGB36, then Transverse Mercator); shown as the main location on an entry; tested against Yr Wyddfa, Pen y Fan and Cadair Idris summits |
 | Walks, map, sync | Walk cards carry a sketch of each route's real shape (`routeSketch()` in `resources/js/ui/walks.js`, from the cached GeoJSON); routes draw in heather on both maps; laptop map has a floating walk picker and tag key; the map only refits when the chosen walk changes; sync is three stat cards |
 | Server pages | `/login` is a split contour panel and form; `/map` reuses the sidebar pattern (exports, account) from `md`, a contour header on phones, map plus a `<details>` entry list that sits beside the map from `lg`. Both reuse `shell/icon` |
+| Cursor | Pointer on every link, enabled button, select, summary and file/radio/checkbox label (`app.css` base layer); `not-allowed` on disabled buttons |
 | Accessibility | Every token pairing passes WCAG AA (4.5:1) in both themes; visible `:focus-visible` ring; skip link to `#content`; photo viewer traps Tab, supports arrow keys and Escape, and returns focus to the opener; reduced motion respected |
 | Visual QA | Sweep every view at 390, 768, 1280, 1440 in light and dark, checking for horizontal overflow (Playwright) |
 | Avoid | Middle-dot metadata strings, arrows appended to links, all-caps labels, `font-semibold` (600 is not loaded) |
@@ -193,6 +194,7 @@ Timestamps in and out are ISO 8601 UTC with milliseconds (`2026-10-11T10:15:30.1
 | Source | `lang/en/app.php` and `lang/cy/app.php`; Pest checks both have the same keys and placeholders |
 | Offline | `php artisan crwydro:export-lang` writes `resources/js/lang/{en,cy}.json` (gitignored); npm `prebuild`, `predev` and `pretest` run it, so translations are bundled and precached |
 | Client | `resources/js/i18n.js` (`t()`, no Alpine, safe in the service worker); `resources/js/ui/language.js` store `$store.i18n` plus `$t()` magic; helpers wrapped with `localised()` re-render on a switch |
+| Toggle | `shell/language-toggle.blade.php` shows the flag of the language you would switch to (Y Ddraig Goch, Union flag; public domain, `public/icons/flags/`), in the phone header and sidebar; both flags on the Sync page. Accessible name and tooltip are the language name, since flags stand for countries |
 | Choice | Saved in `localStorage` (`crwydro.locale`), default from the browser language; mirrored to the unencrypted `crwydro_locale` cookie |
 | Server pages | `SetLocaleFromCookie` middleware on the web group, so `/login` and `/map` match the app |
 | Place names | Welsh first with English in brackets in both languages; tag names and walk notes follow the chosen language |

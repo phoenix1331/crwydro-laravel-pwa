@@ -127,6 +127,22 @@
         @apply font-extrabold tracking-[-0.02em] text-balance;
     }
 
+    /* Tailwind's preflight gives buttons the default arrow; every control gets the hand */
+    a[href],
+    button:not(:disabled),
+    [role='button'],
+    select,
+    summary,
+    label:has(input[type='file']),
+    label:has(input[type='radio']),
+    label:has(input[type='checkbox']) {
+        cursor: pointer;
+    }
+
+    button:disabled {
+        cursor: not-allowed;
+    }
+
     :focus-visible {
         outline: 3px solid var(--accent);
         outline-offset: 2px;

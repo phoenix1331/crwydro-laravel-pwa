@@ -3,6 +3,9 @@
     <div class="flex h-14 items-center justify-between px-4">
         @include('shell.brand')
 
+        <div class="flex items-center gap-2">
+            @include('shell.language-toggle')
+
         <a href="#/sync" x-data class="flex min-h-10 items-center gap-2 rounded-full px-3 text-sm font-bold"
            :class="$store.sync.unsynced ? 'bg-warn-soft text-warn' : 'bg-panel-line text-panel-ink'"
            :aria-label="$store.sync.unsynced ? $t('status.count_on_device', { count: $store.sync.unsynced }) : $t('status.all_synced')">
@@ -10,5 +13,6 @@
             <span x-show="$store.sync.unsynced" x-text="$t('status.count_on_device', { count: $store.sync.unsynced })"></span>
             <span x-show="! $store.sync.unsynced" x-cloak x-text="$t('status.all_synced')">All synced</span>
         </a>
+        </div>
     </div>
 </header>
