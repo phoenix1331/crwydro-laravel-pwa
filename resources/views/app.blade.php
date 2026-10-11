@@ -26,8 +26,8 @@
         <main class="flex-1 px-4 pt-4 pb-28">
             @include('shell.views.entries')
             @include('shell.views.new')
-            @include('shell.views.placeholder', ['view' => 'entry', 'title' => 'Entry'])
-            @include('shell.views.placeholder', ['view' => 'edit', 'title' => 'Edit entry'])
+            @include('shell.views.entry')
+            @include('shell.views.edit')
             @include('shell.views.placeholder', ['view' => 'sync', 'title' => 'Sync'])
             @include('shell.views.placeholder', ['view' => 'login', 'title' => 'Log in'])
         </main>
