@@ -17,6 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Behind a TLS-terminating proxy (ngrok, a load balancer) honour X-Forwarded-Proto and -Host,
+        // so asset and route URLs come out as https and aren't blocked as mixed content.
+        // TRUSTED_PROXIES defaults to any proxy for local tunnels; set the proxy's IPs in production.
+        $middleware->trustProxies(at: env('TRUSTED_PROXIES', '*'));
+
         // Written by the PWA in plain text, so it must not be encrypted
         $middleware->encryptCookies(except: ['crwydro_locale']);
         $middleware->web(append: [SetLocaleFromCookie::class]);

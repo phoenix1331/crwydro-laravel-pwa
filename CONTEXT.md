@@ -44,6 +44,7 @@ All artisan, composer, npm and test commands run inside the container: `docker c
 | Redis for queue, cache and sessions | Queued thumbnail and EXIF jobs; one fast backing service |
 | MySQL | Project default stack |
 | Photos stored at `photos/{user_id}/{entry_id}/{photo_id}.jpg` on `PHOTOS_DISK` (`config/crwydro.php`) | Deterministic path makes retries overwrite rather than orphan files; local in dev, S3 in production |
+| `trustProxies(at: env('TRUSTED_PROXIES', '*'))` in `bootstrap/app.php` | Behind ngrok or a load balancer, honour `X-Forwarded-Proto` so asset URLs are `https`; without it the page loads over HTTPS but its CSS and JS are blocked as mixed content |
 | Hash routes (`/#/entries/new`) with one Blade shell at `/` | Only one HTML document to precache; every view works offline |
 | Fonts self-hosted via `laravel-vite-plugin/fonts` and `@fonts` (Atkinson Hyperlegible Next 400/700/800) | No third-party font request, so the shell renders identically offline |
 | Service worker via `vite-plugin-pwa` `injectManifest` (`resources/js/sw.js`) | Custom worker needed later for Background Sync; worker emitted to `public/sw.js` so its scope is `/` |

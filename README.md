@@ -65,6 +65,8 @@ Then, as needed:
 6. `make test` runs Pest, `make test-js` runs Vitest, `make e2e` runs the Playwright suite in its own container
 7. `make help` lists every target
 
+To try it on a phone, expose port 8000 through an HTTPS tunnel such as ngrok (service workers need HTTPS away from localhost). On ngrok's free plan, tap **Visit Site** on its warning page once, so later requests, including the service worker, go straight through.
+
 To try it offline: open the app once, then switch your browser to offline in DevTools (or put your phone in airplane mode) and keep logging entries.
 
 ## Environment variables
@@ -74,6 +76,7 @@ Crwydro-specific and changed defaults; everything else is standard Laravel.
 | Key | Default | Description |
 |-----|---------|-------------|
 | `APP_URL` | `http://localhost:8000` | Base URL |
+| `TRUSTED_PROXIES` | `*` | Proxies whose `X-Forwarded-*` headers are trusted, so URLs come out as `https` behind ngrok or a load balancer. Set the proxy's IPs in production |
 | `APP_PORT` | `8000` | Host port for the app container |
 | `VITE_PORT` | `5173` | Host port for the Vite dev server |
 | `DB_HOST` / `DB_PORT` | `mysql` / `3306` | MySQL inside the Compose network |
