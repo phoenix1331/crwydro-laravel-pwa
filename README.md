@@ -1,10 +1,16 @@
 # Crwydro
 
+<img width="3196" height="1640" alt="Screenshot 2026-10-12 131953" src="https://github.com/user-attachments/assets/b649514e-7134-4afb-bf00-1e04cb7566ac" />
+
+
 An offline-first field journal for walkers in the Welsh hills: log a photo, a note and a GPS position with no signal, and it syncs itself once a connection returns.
 
 *Crwydro* is Welsh for "to wander or roam" (said "KROO-id-roh").
 
 ## What this demonstrates
+
+<img width="3150" height="1658" alt="Screenshot 2026-10-12 132051" src="https://github.com/user-attachments/assets/0c3f65ae-3ee1-4650-aed5-975c41c4d714" />
+
 
 Most note and photo apps quietly fail in mobile dead zones like Eryri, Bannau Brycheiniog and the Cambrian Mountains. Crwydro turns the usual model around: **the phone is the source of truth and the server is the backup**. Building it properly touches most of the hard parts of offline web apps, which is the point of this repo.
 
@@ -62,10 +68,11 @@ Copy `.env.example` to `.env`, then:
 Then, as needed:
 
 5. `make dev` runs Vite with hot reload (the service worker is off in dev; use `make assets` to test offline behaviour)
-6. `make test` runs Pest, `make test-js` runs Vitest, `make e2e` runs the Playwright suite in its own container
-7. `make help` lists every target
+6. `make tunnel` shares the app on a temporary public HTTPS URL
+7. `make test` runs Pest, `make test-js` runs Vitest, `make e2e` runs the Playwright suite in its own container
+8. `make help` lists every target
 
-To try it on a phone, expose port 8000 through an HTTPS tunnel such as ngrok (service workers need HTTPS away from localhost). On ngrok's free plan, tap **Visit Site** on its warning page once, so later requests, including the service worker, go straight through.
+To try it on a phone or with a screen capture tool, run `make tunnel` for a temporary public HTTPS URL (a Cloudflare quick tunnel; service workers need HTTPS away from localhost). Unlike ngrok's free plan, it shows no warning page, so capture tools and the service worker reach the app directly. The URL can take a minute to resolve; stop it with Ctrl+C.
 
 To try it offline: open the app once, then switch your browser to offline in DevTools (or put your phone in airplane mode) and keep logging entries.
 

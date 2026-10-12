@@ -3,7 +3,7 @@
 DC = docker compose
 APP = $(DC) exec app
 
-.PHONY: help setup up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js queue-restart routes contours e2e parks
+.PHONY: help setup up tunnel down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js queue-restart routes contours e2e parks
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -85,3 +85,8 @@ e2e: ## Run Playwright end-to-end tests against a production build (needs the st
 
 parks: ## Re-import national park boundaries from OpenStreetMap (via Nominatim)
 	@python3 -I scripts/import_parks.py public/parks
+
+tunnel: ## Share the app on a temporary public https URL (Cloudflare quick tunnel); Ctrl+C to stop
+	@echo "Starting a public tunnel. Anyone with the URL can reach this app until you stop it."
+	@echo "The URL can take a minute to start resolving."
+	@$(DC) run --rm tunnel 2>&1 | grep --line-buffered -E 'https://[a-z0-9-]+\.trycloudflare\.com|ERR' | grep --line-buffered -v 'cert.pem'

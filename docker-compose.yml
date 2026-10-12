@@ -53,6 +53,17 @@ services:
         condition: service_healthy
     command: npx playwright test
 
+  # Public HTTPS URL for testing on a phone or with screen capture tools.
+  # Cloudflare quick tunnels need no account and show no interstitial page (unlike ngrok's free plan)
+  tunnel:
+    image: cloudflare/cloudflared:2025.9.1
+    profiles: ["tunnel"]
+    network_mode: "service:app"
+    command: tunnel --no-autoupdate --url http://localhost:8000
+    depends_on:
+      app:
+        condition: service_healthy
+
   mysql:
     image: mysql:8.4
     ports:

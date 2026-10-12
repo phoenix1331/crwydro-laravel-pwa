@@ -10,6 +10,7 @@ Offline-first, bilingual (Welsh/English) PWA field journal for walkers in the We
 | `mysql` | `mysql:8.4` | 3307 | 3306 is taken on the dev host; `FORWARD_DB_PORT` |
 | `queue` | `crwydro-app` (same image) | none | `php artisan queue:work`; `make queue-restart` after code changes |
 | `redis` | `redis:7-alpine` | not exposed | Sessions, cache, queue |
+| `tunnel` (profile) | `cloudflare/cloudflared` | none | `make tunnel`: Cloudflare quick tunnel sharing the app's network; public HTTPS URL with no interstitial (ngrok's free plan shows one to browsers, which breaks capture tools and the service worker) |
 
 All artisan, composer, npm and test commands run inside the container: `docker compose exec app ...`. First run: `make build`, `make up`, `make setup`.
 
