@@ -1,10 +1,16 @@
 # Crwydro
 
+<img width="3196" height="1640" alt="Screenshot 2026-10-12 131953" src="https://github.com/user-attachments/assets/b649514e-7134-4afb-bf00-1e04cb7566ac" />
+
+
 An offline-first field journal for walkers in the Welsh hills: log a photo, a note and a GPS position with no signal, and it syncs itself once a connection returns.
 
 *Crwydro* is Welsh for "to wander or roam" (said "KROO-id-roh").
 
 ## What this demonstrates
+
+<img width="3150" height="1658" alt="Screenshot 2026-10-12 132051" src="https://github.com/user-attachments/assets/0c3f65ae-3ee1-4650-aed5-975c41c4d714" />
+
 
 Most note and photo apps quietly fail in mobile dead zones like Eryri, Bannau Brycheiniog and the Cambrian Mountains. Crwydro turns the usual model around: **the phone is the source of truth and the server is the backup**. Building it properly touches most of the hard parts of offline web apps, which is the point of this repo.
 
