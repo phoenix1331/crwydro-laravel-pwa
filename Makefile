@@ -3,10 +3,17 @@
 DC = docker compose
 APP = $(DC) exec app
 
-.PHONY: help up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js queue-restart routes contours e2e parks
+.PHONY: help setup up down build shell migrate seed test logs fresh artisan composer tinker lint lint-test dev npm assets test-js queue-restart routes contours e2e parks
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
+
+setup: ## First run: install dependencies, create the app key, migrate and seed, build assets
+	@$(APP) composer install
+	@$(APP) npm install
+	@$(APP) php artisan key:generate
+	@$(APP) php artisan migrate --seed --force
+	@$(APP) sh -c "rm -f public/hot && npm run build"
 
 up: ## Start all containers in the background
 	@$(DC) up -d
@@ -50,7 +57,7 @@ lint: ## Fix code style with Pint
 lint-test: ## Check code style without fixing
 	@$(APP) ./vendor/bin/pint --test
 
-dev: ## Run artisan dev in the app container (queue, logs, Vite)
+dev: ## Run artisan dev in the app container (logs and Vite; FrankenPHP and the queue container do the rest)
 	@$(APP) php artisan dev
 
 npm: ## Run an npm command in the app container, e.g. make npm cmd="install"
@@ -68,7 +75,7 @@ queue-restart: ## Restart the queue worker so it picks up code changes
 routes: ## Re-import featured walk GeoJSON from OpenStreetMap (via Waymarked Trails)
 	@python3 -I scripts/import_routes.py public/routes
 
-contours: ## Regenerate the contour texture used on the brand panel
+contours: ## Regenerate the contour texture used on the web login panel
 	@python3 -I scripts/contours.py resources/images/contours.svg
 
 e2e: ## Run Playwright end-to-end tests against a production build (needs the stack up)

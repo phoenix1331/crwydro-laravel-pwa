@@ -11,7 +11,7 @@ Offline-first, bilingual (Welsh/English) PWA field journal for walkers in the We
 | `queue` | `crwydro-app` (same image) | none | `php artisan queue:work`; `make queue-restart` after code changes |
 | `redis` | `redis:7-alpine` | not exposed | Sessions, cache, queue |
 
-All artisan, composer, npm and test commands run inside the container: `docker compose exec app ...`
+All artisan, composer, npm and test commands run inside the container: `docker compose exec app ...`. First run: `make build`, `make up`, `make setup`.
 
 `make dev` runs `php artisan dev` in the container. `AppServiceProvider` drops its `server` and `queue` processes (FrankenPHP serves, the `queue` container works jobs), leaving logs and Vite. `make assets` builds for production and removes `public/hot`; offline and service worker testing needs a production build.
 
