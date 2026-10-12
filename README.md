@@ -2,6 +2,8 @@
 
 <img width="3196" height="1640" alt="Screenshot 2026-10-12 131953" src="https://github.com/user-attachments/assets/b649514e-7134-4afb-bf00-1e04cb7566ac" />
 
+<img width="1024" height="768" alt="crwydro (1)" src="https://github.com/user-attachments/assets/0b56d113-d780-4aa4-810d-a2ecbd78b8c8" />
+
 
 An offline-first field journal for walkers in the Welsh hills: log a photo, a note and a GPS position with no signal, and it syncs itself once a connection returns.
 
